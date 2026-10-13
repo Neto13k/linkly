@@ -20,6 +20,7 @@
   "homepage": "https://github.com/Neto13k/linkly#readme",
   "dependencies": {
     "express": "^5.3.0",
+    "jsonwebtoken": "^9.0.3",
     "pg": "^8.23.1"
   }
 }
