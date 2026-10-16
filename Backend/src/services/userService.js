@@ -40,3 +40,9 @@ export const updateUser = async (id, username, email) => {
     return result.rows[0];
 }
 
+export const deleteUser = async (id) => {
+    const query = 'DELETE FROM users WHERE id = $1 RETURNING id';
+    const values = [id];
+    const result = await pool.query(query, values);
+    return result.rows[0];
+}
