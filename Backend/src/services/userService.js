@@ -33,3 +33,10 @@ export const createUser = async (username, email, password) => {
     return result.rows[0];
 }
 
+export const updateUser = async (id, username, email) => {
+    const query = 'UPDATE users SET username = $1, email = $2 WHERE id = $3 RETURNING id, username, email, created_at';
+    const values = [username, email.trim().toLowerCase(), id];
+    const result = await pool.query(query, values);
+    return result.rows[0];
+}
+
