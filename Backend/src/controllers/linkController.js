@@ -145,3 +145,28 @@ export const incrementClickCount = async (req, res) => {
         res.status(500).json({ message: 'Erro ao incrementar o contador de cliques' });
     }
 };
+
+export const redirectLink = async (req, res) => {
+    try {
+        //validar se o slug é uma string não vazia e contém apenas letras, números e hífens
+        const slugRegex = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+        const { slug } = req.params;
+        if (!slug || typeof slug !== 'string' || !slugRegex.test(slug.trim())) {
+            return res.status(400).json({ message: 'Slug inválido' });
+        }
+        //validar se o ID do usuário é um número inteiro
+        const user_id = Number(req.params.userid);
+        if (isNaN(user_id) || user_id <= 0 || !Number.isInteger(user_id)) {
+            return res.status(400).json({ message: 'ID de usuário inválido' });
+        }
+        const link = await linkService.getLinkBySlug(slug, user_id);
+        if (!link) {
+            return res.status(404).json({ message: 'Link não encontrado' });
+        }
+        //contador de cliques é incrementado antes do redirecionamento
+        await linkService.incrementClickCount(link.id);
+        res.redirect(link.destination_url);
+    } catch (error) {
+        res.status(500).json({ message: 'Erro ao redirecionar o link' });
+    }
+};
