@@ -34,3 +34,10 @@ export const deleteLink = async (id, user_id) => {
     const result = await pool.query(query, values);
     return result.rows[0];
 }
+
+export const incrementClickCount = async (id) => {
+    const query = 'UPDATE links SET click_count = click_count + 1 WHERE id = $1 RETURNING id, destination_url, slug, click_count, created_at';
+    const values = [id];
+    const result = await pool.query(query, values);
+    return result.rows[0];
+}
