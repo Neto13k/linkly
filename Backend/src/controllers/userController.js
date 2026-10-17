@@ -85,6 +85,13 @@ export const updateUser = async (req, res) => {
 
 export const deleteUser = async (req, res) => {
     try {
+
+        //validar se o ID do usuário é um número inteiro
+        const userId = Number(req.params.id);
+        if (isNaN(userId) || userId <= 0 || !Number.isInteger(userId)) {
+            return res.status(400).json({ message: 'ID de usuário inválido' });
+        }
+
         const deletedUser = await userService.deleteUser(req.params.id);
         if (!deletedUser) {
             return res.status(404).json({ message: 'Usuario no encontrado' });
