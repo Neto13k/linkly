@@ -2,7 +2,7 @@ import * as userService from '../services/userService.js';
 
 export const getUserById = async (req, res) => {
     try { 
-        //validar se o ID do usuário é um número inteiro{
+        //validar se o ID do usuário é um número inteiro
         const userId = Number(req.params.id);
         if (isNaN(userId) || userId <= 0 || !Number.isInteger(userId)) {
             return res.status(400).json({ message: 'ID de usuário inválido' });
@@ -20,7 +20,14 @@ export const getUserById = async (req, res) => {
 
 export const getUserByEmail = async (req, res) => {
     try {
-        const user = await userService.getUserByEmail(req.params.email);
+        //validar se o email é uma string não vazia
+        if (typeof req.params.email !== 'string' || !req.params.email.trim()) {
+            return res.status(400).json({ message: 'Email inválido' });
+        }
+        //normalizar o email para minúsculas e remover espaços em branco
+        const normalizedEmail = req.params.email.trim().toLowerCase();
+
+        const user = await userService.getUserByEmail(normalizedEmail);
         if (!user) {
             return res.status(404).json({ message: 'Usuario no encontrado' });
         }
