@@ -8,13 +8,13 @@ export const getUserById = async (req, res) => {
             return res.status(400).json({ message: 'ID de usuário inválido' });
         }
 
-        const user = await userService.getUserById(req.params.id);
+        const user = await userService.getUserById(userId);
         if (!user) {
             return res.status(404).json({ message: 'Usuario no encontrado' });
         }
         res.json(user);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Erro ao buscar o usuário' });
     }
 };
 
