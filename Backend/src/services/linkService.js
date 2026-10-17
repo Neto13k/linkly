@@ -27,3 +27,10 @@ export const updateLink = async (id, user_id, destinationUrl, slug) => {
     const result = await pool.query(query, values);
     return result.rows[0];
 }
+
+export const deleteLink = async (id, user_id) => {
+    const query = 'DELETE FROM links WHERE id = $1 AND user_id = $2 RETURNING id';
+    const values = [id, user_id];
+    const result = await pool.query(query, values);
+    return result.rows[0];
+}
