@@ -44,7 +44,7 @@ export const createUser = async (req, res) => {
         const newUser = await userService.createUser(username.trim(), normalizedEmail, password);
         res.status(201).json(newUser);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message:'Erro ao criar o usuário' });
     }
 };
 
