@@ -1,7 +1,13 @@
 import * as userService from '../services/userService.js';
 
 export const getUserById = async (req, res) => {
-    try {
+    try { 
+        //validar se o ID do usuário é um número inteiro{
+        const userId = Number(req.params.id);
+        if (isNaN(userId) || userId <= 0 || !Number.isInteger(userId)) {
+            return res.status(400).json({ message: 'ID de usuário inválido' });
+        }
+
         const user = await userService.getUserById(req.params.id);
         if (!user) {
             return res.status(404).json({ message: 'Usuario no encontrado' });
