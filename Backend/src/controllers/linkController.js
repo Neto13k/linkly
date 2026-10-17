@@ -96,8 +96,14 @@ export const updateLink = async (req, res) => {
             return res.status(400).json({ message: 'Slug inválido' });
         }
         const link = await linkService.updateLink( id, user_id, destinationUrl, slug );
+        if (!link) {
+            return res.status(404).json({ message: 'Link não encontrado' });
+        }
         res.json(link);
     } catch (error) {
+        if (error.code === '23505') { // código de erro para violação de chave única no PostgreSQL
+            return res.status(409).json({ message: 'Slug já em uso' });
+        }
         res.status(500).json({ message: 'Erro ao atualizar o link' });
     }
 };
