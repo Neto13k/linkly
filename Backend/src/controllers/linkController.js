@@ -107,3 +107,25 @@ export const updateLink = async (req, res) => {
         res.status(500).json({ message: 'Erro ao atualizar o link' });
     }
 };
+
+export const deleteLink = async (req, res) => {
+    try {
+        const { id, user_id } = req.body;
+        //validar se o ID do link é um número inteiro
+        if (!id || typeof id !== 'number' || id <= 0 || !Number.isInteger(id)) {
+            return res.status(400).json({ message: 'ID de link inválido' });
+        }
+        //validar se o ID do usuário é um número inteiro
+        if (!user_id || typeof user_id !== 'number' || user_id <= 0 || !Number.isInteger(user_id)) {
+            return res.status(400).json({ message: 'ID de usuário inválido' });
+        }
+        const link = await linkService.deleteLink( id, user_id );
+        if (!link) {
+            return res.status(404).json({ message: 'Link não encontrado' });
+        }
+        res.json({ message: 'Link deletado com sucesso' });
+    } catch (error) {
+        res.status(500).json({ message: 'Erro ao deletar o link' });
+    }
+};
+
