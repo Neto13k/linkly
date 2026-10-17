@@ -7,3 +7,10 @@ export const getLinkById = async (id) => {
     return result.rows[0];
 }
 
+export const getLinksByUserId = async (userId) => {
+    const query = 'SELECT id, destination_url, slug, click_count, created_at FROM links WHERE user_id = $1';
+    const values = [userId];
+    const result = await pool.query(query, values);
+    return result.rows;
+}
+
