@@ -16,3 +16,17 @@ export const getLinkById = async (req, res) => {
         res.status(500).json({ message: 'Erro ao buscar o link' });
     }
 };
+
+export const getLinksByUserId = async (req, res) => {
+    try {
+        //validar se o ID do usuário é um número inteiro
+        const userId = Number(req.params.userId);
+        if (isNaN(userId) || userId <= 0 || !Number.isInteger(userId)) {
+            return res.status(400).json({ message: 'ID de usuário inválido' });
+        }
+        const links = await linkService.getLinksByUserId(userId);
+        res.json(links);
+    } catch (error) {
+        res.status(500).json({ message: 'Erro ao buscar os links do usuário' });
+    }
+};
