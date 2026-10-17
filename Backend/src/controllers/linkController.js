@@ -30,3 +30,34 @@ export const getLinksByUserId = async (req, res) => {
         res.status(500).json({ message: 'Erro ao buscar os links do usuário' });
     }
 };
+
+export const createLink = async (req, res) => {
+    try {
+        const { userId, slug, destinationUrl } = req.body;
+        //validar se o ID do usuário é um número inteiro
+        if (!userId || typeof userId !== 'number' || userId <= 0 || !Number.isInteger(userId)) {
+            return res.status(400).json({ message: 'ID de usuário inválido' });
+        }
+        //validar se a URL de destino é uma string não vazia
+        if (!destinationUrl || typeof destinationUrl !== 'string' || !destinationUrl.trim()) {
+            return res.status(400).json({ message: 'URL de destino inválida' });
+        }
+        //validar se a URL de destino é uma URL válida http ou https
+        try {
+            const url = new URL(destinationUrl);
+            if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+                return res.status(400).json({ message: 'URL de destino inválida' });
+            }
+        } catch (error) {
+            return res.status(400).json({ message: 'URL de destino inválida' });
+        }
+        //validar se o slug é uma string não vazia
+        if (!slug || typeof slug !== 'string' || !slug.trim()) {
+            return res.status(400).json({ message: 'Slug inválido' });
+        }
+        const link = await linkService.createLink( userId, destinationUrl, slug );
+        res.status(201).json(link);
+    } catch (error) {
+        res.status(500).json({ message: 'Erro ao criar o link' });
+    }
+};
