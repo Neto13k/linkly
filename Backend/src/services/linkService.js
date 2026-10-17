@@ -20,3 +20,10 @@ export const createLink = async (userId, destinationUrl, slug) => {
     const result = await pool.query(query, values);
     return result.rows[0];
 }
+
+export const updateLink = async (id, user_id, destinationUrl, slug) => {
+    const query = 'UPDATE links SET destination_url = $1, slug = $2 WHERE id = $3 AND user_id = $4 RETURNING id, destination_url, slug, click_count, created_at';
+    const values = [destinationUrl.trim(), slug.trim(), id, user_id];
+    const result = await pool.query(query, values);
+    return result.rows[0];
+}
