@@ -129,3 +129,19 @@ export const deleteLink = async (req, res) => {
     }
 };
 
+export const incrementClickCount = async (req, res) => {
+    try {
+        const linkId = Number(req.params.id);
+        //validar se o ID do link é um número inteiro
+        if (isNaN(linkId) || linkId <= 0 || !Number.isInteger(linkId)) {
+            return res.status(400).json({ message: 'ID de link inválido' });
+        }
+        const link = await linkService.incrementClickCount(linkId);
+        if (!link) {
+            return res.status(404).json({ message: 'Link não encontrado' });
+        }
+        res.json(link);
+    } catch (error) {
+        res.status(500).json({ message: 'Erro ao incrementar o contador de cliques' });
+    }
+};
