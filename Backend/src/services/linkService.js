@@ -41,3 +41,10 @@ export const incrementClickCount = async (id) => {
     const result = await pool.query(query, values);
     return result.rows[0];
 }
+
+export const getLinkBySlug = async (slug, user_id) => {
+    const query = 'SELECT id, destination_url, slug, click_count, created_at FROM links WHERE slug = $1 AND user_id = $2';
+    const values = [slug, user_id];
+    const result = await pool.query(query, values);
+    return result.rows[0];
+}
