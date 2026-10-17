@@ -92,12 +92,12 @@ export const deleteUser = async (req, res) => {
             return res.status(400).json({ message: 'ID de usuário inválido' });
         }
 
-        const deletedUser = await userService.deleteUser(req.params.id);
+        const deletedUser = await userService.deleteUser(userId);
         if (!deletedUser) {
             return res.status(404).json({ message: 'Usuario no encontrado' });
         }
         res.json({ message: 'Usuario excluido com sucesso' });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Erro ao excluir o usuário' });
     }
 };
