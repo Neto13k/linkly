@@ -14,3 +14,9 @@ export const getLinksByUserId = async (userId) => {
     return result.rows;
 }
 
+export const createLink = async (userId, destinationUrl, slug) => {
+    const query = 'INSERT INTO links (user_id, destination_url, slug) VALUES ($1, $2, $3) RETURNING id, destination_url, slug, click_count, created_at';
+    const values = [userId, destinationUrl.trim(), slug.trim()];
+    const result = await pool.query(query, values);
+    return result.rows[0];
+}
