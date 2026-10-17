@@ -33,3 +33,16 @@ export const createUser = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+export const updateUser = async (req, res) => {
+    try {
+        const { username, email } = req.body;
+        const updatedUser = await userService.updateUser(req.params.id, username, email);
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+        res.json(updatedUser);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
