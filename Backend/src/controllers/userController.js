@@ -27,7 +27,21 @@ export const getUserByEmail = async (req, res) => {
 export const createUser = async (req, res) => {
     try {
         const { username, email, password } = req.body;
-        const newUser = await userService.createUser(username, email, password);
+        //validar os campos obrigatórios
+        if (typeof username !== 'string' || typeof email !== 'string' || typeof password !== 'string' || !username.trim() || !email.trim() || !password.trim()) {
+            return res.status(400).json({ message: 'Todos os campos são obrigatórios' });
+        }
+        //validar o tamanho da senha
+        if (password.length < 8 || password.trim().length < 8) {
+            return res.status(400).json({ message: 'A senha deve ter pelo menos 8 caracteres' });
+        }
+        //validar se o email já está em uso
+        const normalizedEmail = email.trim().toLowerCase();
+        const existingUser = await userService.getUserByEmail(normalizedEmail);
+        if (existingUser) {
+            return res.status(409).json({ message: 'O email já está em uso' });
+        }
+        const newUser = await userService.createUser(username.trim(), normalizedEmail, password);
         res.status(201).json(newUser);
     } catch (error) {
         res.status(500).json({ message: error.message });
