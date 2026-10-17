@@ -51,13 +51,29 @@ export const createUser = async (req, res) => {
 export const updateUser = async (req, res) => {
     try {
         const { username, email } = req.body;
-        const updatedUser = await userService.updateUser(req.params.id, username, email);
+
+        //validar se o ID do usuário é um número inteiro
+        const userId = Number(req.params.id);
+        if (isNaN(userId) || userId <= 0 || !Number.isInteger(userId)) {
+            return res.status(400).json({ message: 'ID de usuário inválido' });
+        }
+        //validar os campos obrigatórios
+        if (typeof username !== 'string' || typeof email !== 'string' || !username.trim() || !email.trim()) {
+            return res.status(400).json({ message: 'Todos os campos são obrigatórios' });
+        }
+        //validar se o email já está em uso por outro usuário
+        const normalizedEmail = email.trim().toLowerCase();
+        const existingUser = await userService.getUserByEmail(normalizedEmail);
+        if (existingUser && existingUser.id !== userId) {
+            return res.status(409).json({ message: 'O email já está em uso por outro usuário' });
+        }
+        const updatedUser = await userService.updateUser(userId, username.trim(), normalizedEmail);
         if (!updatedUser) {
             return res.status(404).json({ message: 'Usuario no encontrado' });
         }
         res.json(updatedUser);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Erro ao atualizar o usuário' });
     }
 };
 
