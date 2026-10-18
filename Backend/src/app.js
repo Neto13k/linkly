@@ -1,4 +1,5 @@
 import express from 'express';
+import userRoutes from './routes/userRoutes.js';
 
 const app = express();
 
@@ -7,6 +8,8 @@ app.use(express.json());
 app.get('/api/health', (req, res) => {
     return res.status(200).json({ message: 'API is running' });
 });
+
+app.use('/api/users', userRoutes);
 
 // 404: nenhuma rota correspondeu à requisição
 app.use((req, res) => {
