@@ -68,20 +68,25 @@ export const createLink = async (req, res) => {
 
 export const updateLink = async (req, res) => {
     try {
-        const { id, user_id, slug, destinationUrl } = req.body;
-        //validar se o ID do link é um número inteiro
-        if (!id || typeof id !== 'number' || id <= 0 || !Number.isInteger(id)) {
+        const id = Number(req.params.id);
+        const { user_id, slug, destinationUrl } = req.body;
+
+        // Validar se o ID do link é um número inteiro
+        if (!Number.isInteger(id) || id <= 0) {
             return res.status(400).json({ message: 'ID de link inválido' });
         }
-        //validar se o ID do usuário é um número inteiro
+
+        // Validar se o ID do usuário é um número inteiro
         if (!user_id || typeof user_id !== 'number' || user_id <= 0 || !Number.isInteger(user_id)) {
             return res.status(400).json({ message: 'ID de usuário inválido' });
         }
-        //validar se a URL de destino é uma string não vazia
+
+        // Validar se a URL de destino é uma string não vazia
         if (!destinationUrl || typeof destinationUrl !== 'string' || !destinationUrl.trim()) {
             return res.status(400).json({ message: 'URL de destino inválida' });
         }
-        //validar se a URL de destino é uma URL válida http ou https
+
+        // Validar se a URL de destino é uma URL válida http ou https
         try {
             const url = new URL(destinationUrl);
             if (url.protocol !== 'http:' && url.protocol !== 'https:') {
@@ -90,39 +95,50 @@ export const updateLink = async (req, res) => {
         } catch (error) {
             return res.status(400).json({ message: 'URL de destino inválida' });
         }
-        //validar se o slug é uma string não vazia e contém apenas letras, números e hífens
+
+        // Validar se o slug contém apenas letras minúsculas, números e hífens
         const slugRegex = /^[a-z0-9]+(-[a-z0-9]+)*$/;
         if (!slug || typeof slug !== 'string' || !slugRegex.test(slug.trim())) {
             return res.status(400).json({ message: 'Slug inválido' });
         }
-        const link = await linkService.updateLink( id, user_id, destinationUrl, slug );
+
+        const link = await linkService.updateLink(id, user_id, destinationUrl, slug);
+
         if (!link) {
             return res.status(404).json({ message: 'Link não encontrado' });
         }
+
         res.json(link);
     } catch (error) {
-        if (error.code === '23505') { // código de erro para violação de chave única no PostgreSQL
+        if (error.code === '23505') {
             return res.status(409).json({ message: 'Slug já em uso' });
         }
+
         res.status(500).json({ message: 'Erro ao atualizar o link' });
     }
 };
 
 export const deleteLink = async (req, res) => {
     try {
-        const { id, user_id } = req.body;
-        //validar se o ID do link é um número inteiro
-        if (!id || typeof id !== 'number' || id <= 0 || !Number.isInteger(id)) {
+        const id = Number(req.params.id);
+        const { user_id } = req.body;
+
+        // Validar se o ID do link é um número inteiro
+        if (!Number.isInteger(id) || id <= 0) {
             return res.status(400).json({ message: 'ID de link inválido' });
         }
-        //validar se o ID do usuário é um número inteiro
+
+        // Validar se o ID do usuário é um número inteiro
         if (!user_id || typeof user_id !== 'number' || user_id <= 0 || !Number.isInteger(user_id)) {
             return res.status(400).json({ message: 'ID de usuário inválido' });
         }
-        const link = await linkService.deleteLink( id, user_id );
+
+        const link = await linkService.deleteLink(id, user_id);
+
         if (!link) {
             return res.status(404).json({ message: 'Link não encontrado' });
         }
+
         res.json({ message: 'Link deletado com sucesso' });
     } catch (error) {
         res.status(500).json({ message: 'Erro ao deletar o link' });
