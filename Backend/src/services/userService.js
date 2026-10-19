@@ -53,3 +53,15 @@ export const getUserForAuthentication = async (email) => {
     const result = await pool.query(query, values);
     return result.rows[0];
 }
+
+export const authenticateUser = async (email, password) => {
+    const user = await getUserForAuthentication(email);
+    if (!user) {
+        return null ;
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.password_hash);
+    if (!isPasswordValid) {
+        return null;
+    }
+    return { id: user.id, username: user.username, email: user.email };
+}
