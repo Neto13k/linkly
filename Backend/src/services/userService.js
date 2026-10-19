@@ -46,3 +46,10 @@ export const deleteUser = async (id) => {
     const result = await pool.query(query, values);
     return result.rows[0];
 }
+
+export const getUserForAuthentication = async (email) => {
+    const query = 'SELECT id, username, email, password_hash FROM users WHERE email = $1';
+    const values = [email.trim().toLowerCase()];
+    const result = await pool.query(query, values);
+    return result.rows[0];
+}
