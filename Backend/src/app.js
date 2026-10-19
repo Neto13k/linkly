@@ -1,6 +1,8 @@
 import express from 'express';
 import userRoutes from './routes/userRoutes.js';
 import linkRoutes from './routes/linkRoutes.js';
+import { notFound } from './middlewares/notFound.js';
+import { errorHandler } from './middlewares/errorHandler.js';
 
 const app = express();
 
@@ -12,6 +14,8 @@ app.get('/api/health', (req, res) => {
 
 app.use('/api/users', userRoutes);
 app.use('/api/links', linkRoutes);
+app.use(notFound);
+app.use(errorHandler);
 
 
 export { app };
