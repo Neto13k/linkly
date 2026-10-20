@@ -46,17 +46,14 @@ export const getLinksByUserId = async (req, res) => {
 
 export const createLink = async (req, res) => {
     try {
-        const { userId, slug, destinationUrl } = req.body;
+        const userId = req.user.id;
+
+        const {slug, destinationUrl } = req.body;
+        
         //validar se o ID do usuário é um número inteiro
         if (!userId || typeof userId !== 'number' || userId <= 0 || !Number.isInteger(userId)) {
             return res.status(400).json({ message: 'ID de usuário inválido' });
         }
-
-        //validar autorização do usuário (exemplo: verificar se o usuário logado é o mesmo que está sendo consultado)
-        if (req.user.id !== userId) {
-            return res.status(403).json({ message: 'Acesso negado' });
-        }
-        
         //validar se a URL de destino é uma string não vazia
         if (!destinationUrl || typeof destinationUrl !== 'string' || !destinationUrl.trim()) {
             return res.status(400).json({ message: 'URL de destino inválida' });
