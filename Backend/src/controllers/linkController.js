@@ -24,6 +24,12 @@ export const getLinksByUserId = async (req, res) => {
         if (isNaN(userId) || userId <= 0 || !Number.isInteger(userId)) {
             return res.status(400).json({ message: 'ID de usuário inválido' });
         }
+
+        //validar autenticação do usuário (exemplo: verificar se o usuário logado é o mesmo que está sendo consultado)
+        if (req.user.id !== userId) {
+            return res.status(403).json({ message: 'Acesso negado' });
+        }
+
         const links = await linkService.getLinksByUserId(userId);
         res.json(links);
     } catch (error) {
