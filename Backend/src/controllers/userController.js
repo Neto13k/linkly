@@ -8,6 +8,11 @@ export const getUserById = async (req, res) => {
             return res.status(400).json({ message: 'ID de usuário inválido' });
         }
 
+        //validar autenticação do usuário (exemplo: verificar se o usuário logado é o mesmo que está sendo buscado)
+        if (req.user.id !== userId) {
+            return res.status(403).json({ message: 'Acesso negado' });
+        }
+
         const user = await userService.getUserById(userId);
         if (!user) {
             return res.status(404).json({ message: 'Usuario no encontrado' });
