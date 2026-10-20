@@ -19,3 +19,38 @@ export const loginUser = async (req, res) => {
         res.status(500).json({ message: 'Erro interno do servidor' });
     }
 };
+
+export const registerUser = async (req, res) => {
+    try {
+        const { username, email, password } = req.body;
+        if (typeof username !== 'string' || typeof email !== 'string' || typeof password !== 'string' || !username.trim() || !email.trim() || !password.trim()) {
+            return res.status(400).json({ message: 'Todos os campos são obrigatórios' });
+        }
+        
+        // validar senha (mínimo 8 caracteres, pelo menos uma letra maiúscula, uma letra minúscula e um número)
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        if (!passwordRegex.test(password)) {
+            return res.status(400).json({ message: 'A senha deve ter no mínimo 8 caracteres, incluindo pelo menos uma letra maiúscula, uma letra minúscula um número e um caractere especial' });
+        }
+
+        //validar se e-mail não está em uso
+        const existingEmail = await userService.getUserByEmail(email);
+        if (existingEmail) {
+            return res.status(409).json({ message: 'E-mail já está em uso' });
+        }
+        
+        // Criar o usuário
+        const user = await userService.createUser(username, email, password);
+        if (!user) {
+            return res.status(400).json({ message: 'Erro ao criar usuário' });
+        }
+        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        return res.status(201).json({ message: 'Usuário registrado com sucesso', token });
+    } catch (error) {
+        if (error.code === '23505') { // código de erro do PostgreSQL para violação de chave única
+            return res.status(409).json({ message: 'E-mail ou nome de usuário já cadastrado' });
+        }
+        console.error(error);
+        res.status(500).json({ message: 'Erro interno do servidor' });
+    }
+};
