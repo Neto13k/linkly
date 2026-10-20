@@ -7,7 +7,14 @@ export const getLinkById = async (req, res) => {
         if (isNaN(linkId) || linkId <= 0 || !Number.isInteger(linkId)) {
             return res.status(400).json({ message: 'ID de link inválido' });
         }
-        const link = await linkService.getLinkById(linkId);
+
+        //validar se o ID do usuário é um número inteiro
+        const userId = req.user.id;
+        if (!userId || typeof userId !== 'number' || userId <= 0 || !Number.isInteger(userId)) {
+            return res.status(400).json({ message: 'ID de usuário inválido' });
+        }
+
+        const link = await linkService.getLinkById(linkId, userId);
         if (!link) {
             return res.status(404).json({ message: 'Link não encontrado' });
         }
