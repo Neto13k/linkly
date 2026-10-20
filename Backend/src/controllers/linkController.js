@@ -85,7 +85,8 @@ export const createLink = async (req, res) => {
 export const updateLink = async (req, res) => {
     try {
         const id = Number(req.params.id);
-        const { user_id, slug, destinationUrl } = req.body;
+        const user_id = req.user.id;
+        const {slug, destinationUrl } = req.body;
 
         // Validar se o ID do link é um número inteiro
         if (!Number.isInteger(id) || id <= 0) {
@@ -96,12 +97,7 @@ export const updateLink = async (req, res) => {
         if (!user_id || typeof user_id !== 'number' || user_id <= 0 || !Number.isInteger(user_id)) {
             return res.status(400).json({ message: 'ID de usuário inválido' });
         }
-
-        // Validar autorização do usuário
-        if (req.user.id !== user_id) {
-            return res.status(403).json({ message: 'Acesso negado' });
-        }
-
+        
         // Validar se a URL de destino é uma string não vazia
         if (!destinationUrl || typeof destinationUrl !== 'string' || !destinationUrl.trim()) {
             return res.status(400).json({ message: 'URL de destino inválida' });
