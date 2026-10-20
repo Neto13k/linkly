@@ -75,6 +75,12 @@ export const updateUser = async (req, res) => {
         if (isNaN(userId) || userId <= 0 || !Number.isInteger(userId)) {
             return res.status(400).json({ message: 'ID de usuário inválido' });
         }
+
+        //validar autenticação do usuário (exemplo: verificar se o usuário logado é o mesmo que está sendo atualizado)
+        if (req.user.id !== userId) {
+            return res.status(403).json({ message: 'Acesso negado' });
+        }
+
         //validar os campos obrigatórios
         if (typeof username !== 'string' || typeof email !== 'string' || !username.trim() || !email.trim()) {
             return res.status(400).json({ message: 'Todos os campos são obrigatórios' });
@@ -103,8 +109,14 @@ export const deleteUser = async (req, res) => {
         if (isNaN(userId) || userId <= 0 || !Number.isInteger(userId)) {
             return res.status(400).json({ message: 'ID de usuário inválido' });
         }
+        //validar autenticação do usuário (exemplo: verificar se o usuário logado é o mesmo que está sendo excluído)
+        if (req.user.id !== userId) {
+            return res.status(403).json({ message: 'Acesso negado' });
+        }
 
+        //chamar o serviço para excluir o usuário
         const deletedUser = await userService.deleteUser(userId);
+
         if (!deletedUser) {
             return res.status(404).json({ message: 'Usuario no encontrado' });
         }
