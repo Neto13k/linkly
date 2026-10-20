@@ -97,7 +97,7 @@ export const updateLink = async (req, res) => {
         if (!user_id || typeof user_id !== 'number' || user_id <= 0 || !Number.isInteger(user_id)) {
             return res.status(400).json({ message: 'ID de usuário inválido' });
         }
-        
+
         // Validar se a URL de destino é uma string não vazia
         if (!destinationUrl || typeof destinationUrl !== 'string' || !destinationUrl.trim()) {
             return res.status(400).json({ message: 'URL de destino inválida' });
@@ -138,7 +138,7 @@ export const updateLink = async (req, res) => {
 export const deleteLink = async (req, res) => {
     try {
         const id = Number(req.params.id);
-        const { user_id } = req.body;
+        const user_id  = req.user.id;
 
         // Validar se o ID do link é um número inteiro
         if (!Number.isInteger(id) || id <= 0) {
@@ -148,11 +148,6 @@ export const deleteLink = async (req, res) => {
         // Validar se o ID do usuário é um número inteiro
         if (!user_id || typeof user_id !== 'number' || user_id <= 0 || !Number.isInteger(user_id)) {
             return res.status(400).json({ message: 'ID de usuário inválido' });
-        }
-
-        // Validar autorização do usuário
-        if (req.user.id !== user_id) {
-            return res.status(403).json({ message: 'Acesso negado' });
         }
 
         const link = await linkService.deleteLink(id, user_id);
