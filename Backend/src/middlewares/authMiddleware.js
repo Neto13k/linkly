@@ -12,7 +12,15 @@ export const authenticateToken = (req, res, next) => {
         if (err) {
             return res.status(401).json({ message: 'Token Inválido' });
         }
+        
+        //validar se o ID é inteiro e positivo
+        if (!Number.isInteger(user?.id) || user.id <= 0) {
+            return res.status(401).json({ message: 'Token Inválido' });
+        }
+        
+        //Armazenar os dados do usuário autenticado
         req.user = user;
+
         next();
     });
 }
