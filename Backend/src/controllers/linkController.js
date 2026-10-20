@@ -93,6 +93,11 @@ export const updateLink = async (req, res) => {
             return res.status(400).json({ message: 'ID de usuário inválido' });
         }
 
+        // Validar autorização do usuário
+        if (req.user.id !== user_id) {
+            return res.status(403).json({ message: 'Acesso negado' });
+        }
+
         // Validar se a URL de destino é uma string não vazia
         if (!destinationUrl || typeof destinationUrl !== 'string' || !destinationUrl.trim()) {
             return res.status(400).json({ message: 'URL de destino inválida' });
@@ -110,7 +115,7 @@ export const updateLink = async (req, res) => {
 
         // Validar se o slug contém apenas letras minúsculas, números e hífens
         const slugRegex = /^[a-z0-9]+(-[a-z0-9]+)*$/;
-        if (!slug || typeof slug !== 'string' || !slugRegex.test(slug.trim())) {
+        if (!slug || typeof slug !== 'string' || !slugRegex.test(slug.trim()) || slug.trim().length < 4) {
             return res.status(400).json({ message: 'Slug inválido' });
         }
 
