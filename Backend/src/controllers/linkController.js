@@ -44,6 +44,12 @@ export const createLink = async (req, res) => {
         if (!userId || typeof userId !== 'number' || userId <= 0 || !Number.isInteger(userId)) {
             return res.status(400).json({ message: 'ID de usuário inválido' });
         }
+
+        //validar autorização do usuário (exemplo: verificar se o usuário logado é o mesmo que está sendo consultado)
+        if (req.user.id !== userId) {
+            return res.status(403).json({ message: 'Acesso negado' });
+        }
+        
         //validar se a URL de destino é uma string não vazia
         if (!destinationUrl || typeof destinationUrl !== 'string' || !destinationUrl.trim()) {
             return res.status(400).json({ message: 'URL de destino inválida' });
@@ -59,7 +65,7 @@ export const createLink = async (req, res) => {
         }
         //validar se o slug é uma string não vazia e contém apenas letras, números e hífens 
         const slugRegex = /^[a-z0-9]+(-[a-z0-9]+)*$/;
-        if (!slug || typeof slug !== 'string' || !slugRegex.test(slug.trim())) {
+        if (!slug || typeof slug !== 'string' || !slugRegex.test(slug.trim()) || slug.trim().length < 4) {
             return res.status(400).json({ message: 'Slug inválido' });
         }
         const link = await linkService.createLink( userId, destinationUrl, slug );
