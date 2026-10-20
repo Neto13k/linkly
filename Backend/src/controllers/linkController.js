@@ -150,6 +150,11 @@ export const deleteLink = async (req, res) => {
             return res.status(400).json({ message: 'ID de usuário inválido' });
         }
 
+        // Validar autorização do usuário
+        if (req.user.id !== user_id) {
+            return res.status(403).json({ message: 'Acesso negado' });
+        }
+
         const link = await linkService.deleteLink(id, user_id);
 
         if (!link) {
