@@ -23,48 +23,6 @@ export const getUserById = async (req, res) => {
     }
 };
 
-export const getUserByEmail = async (req, res) => {
-    try {
-        //validar se o email é uma string não vazia
-        if (typeof req.params.email !== 'string' || !req.params.email.trim()) {
-            return res.status(400).json({ message: 'Email inválido' });
-        }
-        //normalizar o email para minúsculas e remover espaços em branco
-        const normalizedEmail = req.params.email.trim().toLowerCase();
-
-        const user = await userService.getUserByEmail(normalizedEmail);
-        if (!user) {
-            return res.status(404).json({ message: 'Usuario no encontrado' });
-        }
-        res.json(user);
-    } catch (error) {
-        res.status(500).json({ message: 'Erro ao buscar o usuário' });
-    }
-};
-
-export const createUser = async (req, res) => {
-    try {
-        const { username, email, password } = req.body;
-        //validar os campos obrigatórios
-        if (typeof username !== 'string' || typeof email !== 'string' || typeof password !== 'string' || !username.trim() || !email.trim() || !password.trim()) {
-            return res.status(400).json({ message: 'Todos os campos são obrigatórios' });
-        }
-        //validar o tamanho da senha
-        if (password.length < 8 || password.trim().length < 8) {
-            return res.status(400).json({ message: 'A senha deve ter pelo menos 8 caracteres' });
-        }
-        //validar se o email já está em uso
-        const normalizedEmail = email.trim().toLowerCase();
-        const existingUser = await userService.getUserByEmail(normalizedEmail);
-        if (existingUser) {
-            return res.status(409).json({ message: 'O email já está em uso' });
-        }
-        const newUser = await userService.createUser(username.trim(), normalizedEmail, password);
-        res.status(201).json(newUser);
-    } catch (error) {
-        res.status(500).json({ message:'Erro ao criar o usuário' });
-    }
-};
 
 export const updateUser = async (req, res) => {
     try {
@@ -97,6 +55,9 @@ export const updateUser = async (req, res) => {
         }
         res.json(updatedUser);
     } catch (error) {
+        if (error.code === '23505') { // código de erro do PostgreSQL para violação de chave única
+            return res.status(409).json({ message: 'O email ou nome de usuário já está em uso' });
+        }
         res.status(500).json({ message: 'Erro ao atualizar o usuário' });
     }
 };
