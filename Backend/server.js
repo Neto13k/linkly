@@ -11,12 +11,13 @@ if (!process.env.JWT_SECRET?.trim()) {
 }
 
 // Iniciar o servidor
-app.listen(PORT, (error) => {
-    if (error) {
-        console.error('Failed to start server:', error);
-        process.exit(1);
-        return;
-    }
-
+const server = app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
+});
+
+//erros
+
+server.on('error', (err) => {
+    console.error('Erro no servidor:', err);
+    process.exit(1);
 });
