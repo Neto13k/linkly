@@ -43,6 +43,13 @@ export const updateUser = async (req, res) => {
         if (typeof username !== 'string' || typeof email !== 'string' || !username.trim() || !email.trim()) {
             return res.status(400).json({ message: 'Todos os campos são obrigatórios' });
         }
+
+        // Validar username (3 a 30 caracteres, letras minúsculas, números e hífens)
+        const usernameRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+        if (!usernameRegex.test(username) || username.length < 3 || username.length > 30) {
+            return res.status(400).json({ message: 'O nome de usuário deve ter entre 3 e 30 caracteres e conter apenas letras minúsculas, números e hífens' });
+        }
+
         //validar se o email já está em uso por outro usuário
         const normalizedEmail = email.trim().toLowerCase();
         const existingUser = await userService.getUserByEmail(normalizedEmail);
