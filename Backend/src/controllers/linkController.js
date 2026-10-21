@@ -72,7 +72,11 @@ export const createLink = async (req, res) => {
         if (!slug || typeof slug !== 'string' || !slugRegex.test(slug.trim()) || slug.trim().length < 4) {
             return res.status(400).json({ message: 'Slug inválido' });
         }
-        const link = await linkService.createLink( userId, destinationUrl, slug );
+
+        //validar o slug normalizado
+        const normalizedSlug = slug.trim();
+
+        const link = await linkService.createLink( userId, destinationUrl, normalizedSlug );
         res.status(201).json(link);
     } catch (error) {
         if (error.code === '23505') { // código de erro para violação de chave única no PostgreSQL
@@ -159,23 +163,6 @@ export const deleteLink = async (req, res) => {
         res.json({ message: 'Link deletado com sucesso' });
     } catch (error) {
         res.status(500).json({ message: 'Erro ao deletar o link' });
-    }
-};
-
-export const incrementClickCount = async (req, res) => {
-    try {
-        const linkId = Number(req.params.id);
-        //validar se o ID do link é um número inteiro
-        if (isNaN(linkId) || linkId <= 0 || !Number.isInteger(linkId)) {
-            return res.status(400).json({ message: 'ID de link inválido' });
-        }
-        const link = await linkService.incrementClickCount(linkId);
-        if (!link) {
-            return res.status(404).json({ message: 'Link não encontrado' });
-        }
-        res.json(link);
-    } catch (error) {
-        res.status(500).json({ message: 'Erro ao incrementar o contador de cliques' });
     }
 };
 
