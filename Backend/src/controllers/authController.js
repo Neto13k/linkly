@@ -26,6 +26,12 @@ export const registerUser = async (req, res) => {
         if (typeof username !== 'string' || typeof email !== 'string' || typeof password !== 'string' || !username.trim() || !email.trim() || !password.trim()) {
             return res.status(400).json({ message: 'Todos os campos são obrigatórios' });
         }
+
+        // Validar username (3 a 30 caracteres, letras minúsculas, números e hífens)
+        const usernameRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+        if (!usernameRegex.test(username) || username.length < 3 || username.length > 30) {
+            return res.status(400).json({ message: 'O nome de usuário deve ter entre 3 e 30 caracteres e conter apenas letras minúsculas, números e hífens' });
+        }
         
         // validar senha (mínimo 8 caracteres, pelo menos uma letra maiúscula, uma letra minúscula e um número)
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -34,7 +40,7 @@ export const registerUser = async (req, res) => {
         }
 
         //validar se e-mail não está em uso
-        const existingEmail = await userService.getUserByEmail(email);
+        const existingEmail = await userService.getUserByEmail(email.trim().toLowerCase());
         if (existingEmail) {
             return res.status(409).json({ message: 'E-mail já está em uso' });
         }
