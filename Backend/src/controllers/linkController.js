@@ -123,7 +123,10 @@ export const updateLink = async (req, res) => {
             return res.status(400).json({ message: 'Slug inválido' });
         }
 
-        const link = await linkService.updateLink(id, user_id, destinationUrl, slug);
+        // Validar o slug normalizado
+        const normalizedSlug = slug.trim();
+
+        const link = await linkService.updateLink(id, user_id, destinationUrl, normalizedSlug);
 
         if (!link) {
             return res.status(404).json({ message: 'Link não encontrado' });
