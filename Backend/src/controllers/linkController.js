@@ -20,6 +20,7 @@ export const getLinkById = async (req, res) => {
         }
         res.json(link);
     } catch (error) {
+        console.error(error);
         res.status(500).json({ message: 'Erro ao buscar o link' });
     }
 };
@@ -40,6 +41,7 @@ export const getLinksByUserId = async (req, res) => {
         const links = await linkService.getLinksByUserId(userId);
         res.json(links);
     } catch (error) {
+        console.error(error);
         res.status(500).json({ message: 'Erro ao buscar os links do usuário' });
     }
 };
@@ -82,6 +84,7 @@ export const createLink = async (req, res) => {
         if (error.code === '23505') { // código de erro para violação de chave única no PostgreSQL
             return res.status(409).json({ message: 'Slug já em uso' });
         }
+        console.error(error);
         res.status(500).json({ message: 'Erro ao criar o link' });
     }
 };
@@ -138,6 +141,7 @@ export const updateLink = async (req, res) => {
             return res.status(409).json({ message: 'Slug já em uso' });
         }
 
+        console.error(error);
         res.status(500).json({ message: 'Erro ao atualizar o link' });
     }
 };
@@ -165,6 +169,7 @@ export const deleteLink = async (req, res) => {
 
         res.json({ message: 'Link deletado com sucesso' });
     } catch (error) {
+        console.error(error);
         res.status(500).json({ message: 'Erro ao deletar o link' });
     }
 };
@@ -203,6 +208,7 @@ export const redirectLink = async (req, res) => {
 
         return res.redirect(link.destination_url);
     } catch (error) {
+        console.error(error);
         return res.status(500).json({ message: 'Erro ao redirecionar o link' });
     }
 };
