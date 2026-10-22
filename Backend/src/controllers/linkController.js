@@ -69,7 +69,7 @@ export const createLink = async (req, res) => {
         }
         //validar se o slug é uma string não vazia e contém apenas letras, números e hífens 
         const slugRegex = /^[a-z0-9]+(-[a-z0-9]+)*$/;
-        if (!slug || typeof slug !== 'string' || !slugRegex.test(slug.trim()) || slug.trim().length < 4) {
+        if (!slug || typeof slug !== 'string' || !slugRegex.test(slug.trim()) || slug.trim().length <  4 || slug.trim().length > 30) {
             return res.status(400).json({ message: 'Slug inválido' });
         }
 
@@ -119,7 +119,7 @@ export const updateLink = async (req, res) => {
 
         // Validar se o slug contém apenas letras minúsculas, números e hífens
         const slugRegex = /^[a-z0-9]+(-[a-z0-9]+)*$/;
-        if (!slug || typeof slug !== 'string' || !slugRegex.test(slug.trim()) || slug.trim().length < 4) {
+        if (!slug || typeof slug !== 'string' || !slugRegex.test(slug.trim()) || slug.trim().length < 4 || slug.trim().length > 30) {
             return res.status(400).json({ message: 'Slug inválido' });
         }
 
