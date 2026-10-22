@@ -26,7 +26,7 @@ export const getUserById = async (req, res) => {
 
 export const updateUser = async (req, res) => {
     try {
-        const { username, email } = req.body;
+        const { email } = req.body;
 
         //validar se o ID do usuário é um número inteiro
         const userId = Number(req.params.id);
@@ -40,30 +40,24 @@ export const updateUser = async (req, res) => {
         }
 
         //validar os campos obrigatórios
-        if (typeof username !== 'string' || typeof email !== 'string' || !username.trim() || !email.trim()) {
-            return res.status(400).json({ message: 'Todos os campos são obrigatórios' });
+        if (typeof email !== 'string' || !email.trim()) {
+            return res.status(400).json({ message: 'O campo email é obrigatório' });
         }
-
-        // Validar username (3 a 30 caracteres, letras minúsculas, números e hífens)
-        const usernameRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-        if (!usernameRegex.test(username) || username.length < 3 || username.length > 30) {
-            return res.status(400).json({ message: 'O nome de usuário deve ter entre 3 e 30 caracteres e conter apenas letras minúsculas, números e hífens' });
-        }
-
+        
         //validar se o email já está em uso por outro usuário
         const normalizedEmail = email.trim().toLowerCase();
         const existingUser = await userService.getUserByEmail(normalizedEmail);
         if (existingUser && existingUser.id !== userId) {
             return res.status(409).json({ message: 'O email já está em uso por outro usuário' });
         }
-        const updatedUser = await userService.updateUser(userId, username.trim(), normalizedEmail);
+        const updatedUser = await userService.updateUser(userId, normalizedEmail);
         if (!updatedUser) {
             return res.status(404).json({ message: 'Usuario no encontrado' });
         }
         res.json(updatedUser);
     } catch (error) {
         if (error.code === '23505') { // código de erro do PostgreSQL para violação de chave única
-            return res.status(409).json({ message: 'O email ou nome de usuário já está em uso' });
+            return res.status(409).json({ message: 'O email já está em uso' });
         }
         res.status(500).json({ message: 'Erro ao atualizar o usuário' });
     }
