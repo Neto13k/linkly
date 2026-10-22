@@ -41,10 +41,26 @@ export const updateUser = async (id, email) => {
 }
 
 export const deleteUser = async (id) => {
-    const query = 'DELETE FROM users WHERE id = $1 RETURNING id';
-    const values = [id];
-    const result = await pool.query(query, values);
-    return result.rows[0];
+    const query = 'DELETE FROM users WHERE id = $1 RETURNING id, username'; // Retorna o id e o username do usuário deletado
+    const connection = await pool.connect(); // Obter uma conexão do pool para iniciar uma transação
+    try { 
+        await connection.query('BEGIN');// Iniciar a transação e consultar o usuário antes de deletar para obter o username
+        const result = await connection.query(query, [id]); 
+
+        if (!result.rows[0]) { // Se não houver usuário com o ID fornecido, faça rollback e retorne undefined
+            await connection.query('ROLLBACK');
+            return undefined;
+        }
+        const username = result.rows[0].username;
+        await connection.query('INSERT INTO blocked_names (name) VALUES ($1) ON CONFLICT DO NOTHING', [username]); // Adicionar o username à tabela blocked_names, ignorando se já existir
+        await connection.query('COMMIT'); // Commit da transação
+        return result.rows[0];
+    } catch (error) { // Em caso de erro, faça rollback da transação
+        await connection.query('ROLLBACK');
+        throw error;
+    } finally { // Garantir que a conexão seja liberada de volta para o pool
+        connection.release();
+    }
 }
 
 export const getUserForAuthentication = async (email) => {
