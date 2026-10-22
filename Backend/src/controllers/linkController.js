@@ -55,7 +55,7 @@ export const createLink = async (req, res) => {
             return res.status(400).json({ message: 'ID de usuário inválido' });
         }
         //validar se a URL de destino é uma string não vazia
-        if (!destinationUrl || typeof destinationUrl !== 'string' || !destinationUrl.trim()) {
+        if (!destinationUrl || typeof destinationUrl !== 'string' || !destinationUrl.trim() || destinationUrl.trim().length > 2048) {
             return res.status(400).json({ message: 'URL de destino inválida' });
         }
         //validar se a URL de destino é uma URL válida http ou https
@@ -103,7 +103,7 @@ export const updateLink = async (req, res) => {
         }
 
         // Validar se a URL de destino é uma string não vazia
-        if (!destinationUrl || typeof destinationUrl !== 'string' || !destinationUrl.trim()) {
+        if (!destinationUrl || typeof destinationUrl !== 'string' || !destinationUrl.trim() || destinationUrl.trim().length > 2048) {
             return res.status(400).json({ message: 'URL de destino inválida' });
         }
 
