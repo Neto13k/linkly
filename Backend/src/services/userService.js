@@ -65,3 +65,10 @@ export const authenticateUser = async (email, password) => {
     }
     return { id: user.id, username: user.username, email: user.email };
 }
+
+export const isUsernameBlocked = async (username) => {
+    const query = 'SELECT COUNT(*) FROM blocked_names WHERE name = $1';
+    const values = [username.trim().toLowerCase()];
+    const result = await pool.query(query, values);
+    return parseInt(result.rows[0].count, 10) > 0;
+}
