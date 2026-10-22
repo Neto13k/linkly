@@ -42,9 +42,9 @@ export const incrementClickCount = async (id) => {
     return result.rows[0];
 }
 
-export const getLinkBySlug = async (slug, user_id) => {
-    const query = 'SELECT id, destination_url, slug, click_count, created_at FROM links WHERE slug = $1 AND user_id = $2';
-    const values = [slug, user_id];
+export const getLinkBySlug = async (slug, username) => {
+    const query = 'SELECT links.id, links.destination_url, links.slug, links.click_count, links.created_at FROM links JOIN users ON links.user_id = users.id WHERE links.slug = $1 AND users.username = $2';
+    const values = [slug, username];
     const result = await pool.query(query, values);
     return result.rows[0];
 }
