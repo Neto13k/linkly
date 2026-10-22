@@ -18,7 +18,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api/users', userRoutes);
 app.use('/api/links', linkRoutes);
 app.use('/api/auth', authRoutes);
-app.get('/:user_id/:slug', redirectLink);
+app.get('/:username/:slug', redirectLink);
 app.use(notFound);
 app.use(errorHandler);
 
