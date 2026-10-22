@@ -19,6 +19,7 @@ export const getUserById = async (req, res) => {
         }
         res.json(user);
     } catch (error) {
+        console.error(error);
         res.status(500).json({ message: 'Erro ao buscar o usuário' });
     }
 };
@@ -59,6 +60,7 @@ export const updateUser = async (req, res) => {
         if (error.code === '23505') { // código de erro do PostgreSQL para violação de chave única
             return res.status(409).json({ message: 'O email já está em uso' });
         }
+        console.error(error);
         res.status(500).json({ message: 'Erro ao atualizar o usuário' });
     }
 };
@@ -84,6 +86,7 @@ export const deleteUser = async (req, res) => {
         }
         res.json({ message: 'Usuario excluido com sucesso' });
     } catch (error) {
+        console.error(error);
         res.status(500).json({ message: 'Erro ao excluir o usuário' });
     }
 };
