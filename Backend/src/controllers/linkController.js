@@ -179,14 +179,20 @@ export const redirectLink = async (req, res) => {
             return res.status(400).json({ message: 'Slug inválido' });
         }
 
-        // Validar se o ID do usuário é um número inteiro
-        const user_id = Number(req.params.user_id);
+        // Validar se o nome de usuário é uma string não vazia
+        const username = req.params.username;
 
-        if (!Number.isInteger(user_id) || user_id <= 0) {
-            return res.status(400).json({ message: 'ID de usuário inválido' });
+        if (!username || typeof username !== 'string' || !username.trim()) {
+            return res.status(400).json({ message: 'Nome de usuário inválido' });
         }
 
-        const link = await linkService.getLinkBySlug(slug, user_id);
+        const usernameRegex =  /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+        if (!usernameRegex.test(username.trim()) || username.trim().length < 3 || username.trim().length > 30) {
+            return res.status(400).json({ message: 'Nome de usuário inválido' });
+        }
+
+        const link = await linkService.getLinkBySlug(slug, username);
 
         if (!link) {
             return res.status(404).json({ message: 'Link não encontrado' });
