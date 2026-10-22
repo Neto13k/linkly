@@ -37,3 +37,41 @@ CREATE TABLE blocked_names (
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT blocked_names_lowercase CHECK (name = lower(name))
 );
+
+-- Nomes de usuário reservados pelo sistema
+INSERT INTO blocked_names (name)
+VALUES
+    ('admin'),
+    ('api'),
+    ('login'),
+    ('register'),
+    ('auth'),
+    ('gov'),
+    ('payments'),
+    ('dashboard'),
+    ('settings'),
+    ('support'),
+    ('www'),
+    ('app'),
+    ('system'),
+    ('root'),
+    ('static'),
+    ('assets'),
+    ('logout'),
+    ('signup'),
+    ('signin'),
+    ('account'),
+    ('profile'),
+    ('users'),
+    ('links'),
+    ('webhook'),
+    ('callback'),
+    ('oauth'),
+    ('help'),
+    ('docs'),
+    ('status'),
+    ('privacy'),
+    ('terms'),
+    ('moderator'),
+    ('administrator')
+ON CONFLICT DO NOTHING;
