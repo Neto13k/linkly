@@ -32,7 +32,13 @@ export const registerUser = async (req, res) => {
         if (!usernameRegex.test(username) || username.length < 3 || username.length > 30) {
             return res.status(400).json({ message: 'O nome de usuário deve ter entre 3 e 30 caracteres e conter apenas letras minúsculas, números e hífens' });
         }
-        
+
+        // Verificar se o nome de usuário está bloqueado
+        const isBlocked = await userService.isUsernameBlocked(username);
+        if (isBlocked) {
+            return res.status(409).json({ message: 'O nome de usuário selecionado está bloqueado' });
+        }
+
         // validar senha (mínimo 8 caracteres, pelo menos uma letra maiúscula, uma letra minúscula e um número)
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
         if (!passwordRegex.test(password)) {
