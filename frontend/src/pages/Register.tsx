@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from 'react-router';
 import { register } from "../services/authService"
 import { saveToken, saveUser } from "../services/sessionService";
 
@@ -8,6 +9,7 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
 const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -17,6 +19,8 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         await register(username, email, password).then((response) => {
             saveToken(response.token);
             saveUser(response.user);
+            // Redirecionar para o dashboard após o registro
+            navigate('/dashboard');
         });
   } catch {
         setError("Failed to register");
