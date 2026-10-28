@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { login } from "../services/authService"
+import { useNavigate } from 'react-router';
 import { saveToken, saveUser } from "../services/sessionService";
 
 export default function Login() {
@@ -7,6 +8,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
 const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -16,6 +18,8 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         await login(email, password).then((response) => {
             saveToken(response.token);
             saveUser(response.user);
+            // Redirecionar para o dashboard após o login
+            navigate('/dashboard');
         });
   } catch {
         setError("Failed to login");
