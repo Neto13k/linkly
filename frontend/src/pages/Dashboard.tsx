@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import type { Link } from "../types/link";
 import { getUser, removeToken, removeUser } from "../services/sessionService";
 import { getLinksByUserId, createLink, updateLink,  deleteLink  } from "../services/linkService";
+import useSessionError from "../hooks/useSessionError";
 
 export default function Dashboard() {
     const [links, setLinks] = useState<Link[]>([]);
@@ -17,6 +18,9 @@ export default function Dashboard() {
     const [editLink, setEditLink] = useState({ slug: "", destination_url: "" });
     const [updating, setUpdating] = useState(false);
 
+    // Hook customizado para lidar com erros de sessão
+    const { handleSessionError } = useSessionError();
+
     // useEffect para buscar os links do usuário quando o componente é montado
     useEffect(() => { 
         const fetchLinks = async () => {
@@ -29,14 +33,16 @@ export default function Dashboard() {
             try { // Pega os links do usuário usando o ID do usuário
                 const userLinks = await getLinksByUserId(user.id);
                 setLinks(userLinks);
-            } catch {
-                setError("Failed to fetch links");
+            } catch (err) {
+                if(!handleSessionError(err)) { // Verifica se o erro é de sessão
+                    setError("Failed to fetch links"); // Se não for, mostra uma mensagem de erro genérica
+                }
             } finally {
                 setLoading(false);
             }
         };
         fetchLinks(); // Chama a função para buscar os links quando o componente é montado
-    }, []);
+    }, [handleSessionError]);
 
     // Função para criar um novo link
     const handleCreateLink = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -48,8 +54,10 @@ export default function Dashboard() {
             const createdLink = await createLink(newLink.slug, newLink.destination_url);
             setLinks((prevLinks) => [...prevLinks, createdLink]); // Adiciona o novo link à lista de links
             setNewLink({ destination_url: "", slug: "" }); // Limpa o formulário após a criação do link
-        } catch {
-            setActionError("Failed to create link");
+        } catch (err){
+            if(!handleSessionError(err)) { // Verifica se o erro é de sessão
+                setActionError("Failed to create link"); // Se não for, mostra uma mensagem de erro genérica
+            }
         } finally {
             setCreating(false);
         }
@@ -69,8 +77,10 @@ export default function Dashboard() {
             const updatedLink = await updateLink(linkId, slug, destinationUrl);
             setLinks((prevLinks) => prevLinks.map((link) => (link.id === linkId ? updatedLink : link)));
             setEditingLinkId(null); // Limpa o estado de edição após a atualização
-        } catch {
-            setActionError("Failed to update link");
+        } catch (err) {
+            if(!handleSessionError(err)) { // Verifica se o erro é de sessão
+                setActionError("Failed to update link"); // Se não for, mostra uma mensagem de erro genérica
+            }
         } finally {
             setUpdating(false);
         }
@@ -87,8 +97,10 @@ export default function Dashboard() {
                 setEditingLinkId(null); // Limpa o estado de edição se o link deletado estava sendo editado
             }
         }       
-        catch {
-            setActionError("Failed to delete link");
+        catch (err) {
+            if(!handleSessionError(err)) { // Verifica se o erro é de sessão
+                setActionError("Failed to delete link"); // Se não for, mostra uma mensagem de erro genérica
+            }
         }
     };
 
@@ -99,7 +111,7 @@ export default function Dashboard() {
     const handleLogout = () => {
         removeToken();
         removeUser();
-        navigate("/login", { replace: true });;
+        navigate("/login", { replace: true });
     }
 
     return (
