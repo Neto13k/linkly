@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
 import type { Link } from "../types/link";
 import { getUser, removeToken, removeUser } from "../services/sessionService";
 import { getLinksByUserId, createLink, updateLink,  deleteLink  } from "../services/linkService";
 import useSessionError from "../hooks/useSessionError";
+import { useNavigate, Link as RouterLink } from "react-router";
+
+
 
 export default function Dashboard() {
     const [links, setLinks] = useState<Link[]>([]);
@@ -118,6 +120,8 @@ export default function Dashboard() {
         <div>
             {/* Formulario para mostrar os links já criados */}
             <h1>Dashboard</h1>
+
+            <RouterLink to="/profile">Meu Perfil</RouterLink> 
             {/* Mostra "Loading..." enquanto os links estão sendo carregados */}
             {loading && <p>Loading...</p>} 
             {/* Mostra a mensagem de erro se houver algum erro no carregamento dos links */}
