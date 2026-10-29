@@ -10,7 +10,8 @@ export const login = async (email: string, password: string): Promise<AuthRespon
   });
 
     if (!response.ok) {
-      throw new Error('Failed to login');
+      const data = await response.json();
+      throw new Error(data.message || 'Failed to login');
     }
 
     return response.json();
@@ -26,7 +27,8 @@ export const register = async  ( username: string, email: string, password: stri
   });
 
     if (!response.ok) {
-        throw new Error('Failed to register');
+      const data = await response.json();
+      throw new Error(data.message || 'Failed to register');
     }
 
     return response.json();
