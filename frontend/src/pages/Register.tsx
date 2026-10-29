@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from 'react-router';
 import { register } from "../services/authService"
 import { saveToken, saveUser } from "../services/sessionService";
+import { Link } from "react-router";
 
 export default function Register() {
   const [username, setUsername] = useState("");
@@ -38,5 +39,7 @@ return (
             {loading ? "Registering..." : "Register"}
         </button>
         {error && <p>{error}</p>}
+        
+        <p>Já possui uma conta? <Link to="/login">Login</Link></p>
     </form>
 );}

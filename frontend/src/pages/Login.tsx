@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { login } from "../services/authService"
-import { useNavigate } from 'react-router';
+import { useNavigate, Link } from 'react-router';
 import { saveToken, saveUser } from "../services/sessionService";
 
 export default function Login() {
@@ -31,10 +31,11 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 return (
     <form onSubmit={handleSubmit}>
         <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <input type="password" placeholder="Senha" value={password} onChange={(e) => setPassword(e.target.value)} />
         <button type="submit" disabled={loading}>Login</button>
-        {error && <p>{error}</p>
-        }
+        {error && <p>{error}</p>}
+
+        <p>Não possui uma conta? <Link to="/register">Registre-se</Link></p>
     </form>
 );
 }
