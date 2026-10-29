@@ -45,6 +45,12 @@ export const registerUser = async (req, res) => {
             return res.status(400).json({ message: 'A senha deve ter no mínimo 8 caracteres, incluindo pelo menos uma letra maiúscula, uma letra minúscula um número e um caractere especial' });
         }
 
+        // validar e-mail (formato válido)
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email.trim())) {
+            return res.status(400).json({ message: 'Formato de e-mail inválido' });
+        }
+
         //validar se e-mail não está em uso
         const existingEmail = await userService.getUserByEmail(email.trim().toLowerCase());
         if (existingEmail) {
