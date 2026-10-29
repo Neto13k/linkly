@@ -64,7 +64,7 @@ export const deleteUser = async (id) => {
 }
 
 export const getUserForAuthentication = async (email) => {
-    const query = 'SELECT id, username, email, password_hash FROM users WHERE email = $1';
+    const query = 'SELECT id, username, email, password_hash, created_at FROM users WHERE email = $1';
     const values = [email.trim().toLowerCase()];
     const result = await pool.query(query, values);
     return result.rows[0];
@@ -79,7 +79,7 @@ export const authenticateUser = async (email, password) => {
     if (!isPasswordValid) {
         return null;
     }
-    return { id: user.id, username: user.username, email: user.email };
+    return { id: user.id, username: user.username, email: user.email, created_at: user.created_at };
 }
 
 export const isUsernameBlocked = async (username) => {
