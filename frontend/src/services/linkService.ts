@@ -1,6 +1,12 @@
 import type { Link } from '../types/link';
 import { getToken } from './sessionService';
 
+const handleAuthError = (response: Response) => {
+    if (response.status === 401) {
+        throw new Error('SESSION_EXPIRED');
+    }
+};
+
 export const getLinksByUserId = async (userId: number): Promise<Link[]> => {
     const token = getToken();
     if (!token) {
@@ -13,9 +19,10 @@ export const getLinksByUserId = async (userId: number): Promise<Link[]> => {
         'Authorization': `Bearer ${token}`,
     },
   });
-  if (!response.ok) {
-    throw new Error('Failed to fetch links');
-  }
+  handleAuthError(response);
+    if (!response.ok) {
+        throw new Error('Failed to fetch links');
+    }
     return response.json();
 };
 
@@ -32,6 +39,7 @@ export const createLink = async (slug: string, destinationUrl: string): Promise<
         },
         body: JSON.stringify({ slug, destinationUrl }),
     });
+    handleAuthError(response);
     if (!response.ok) {
         throw new Error('Failed to create link');
     }
@@ -51,6 +59,7 @@ export const updateLink = async (linkId: number, slug: string, destinationUrl: s
         },
         body: JSON.stringify({ slug, destinationUrl }),
     });
+    handleAuthError(response);
     if (!response.ok) {
         throw new Error('Failed to update link');
     }
@@ -69,6 +78,7 @@ export const deleteLink = async (linkId: number): Promise<void> => {
             'Authorization': `Bearer ${token}`,
         },
     });
+    handleAuthError(response);
     if (!response.ok) {
         throw new Error('Failed to delete link');
     }
