@@ -4,6 +4,7 @@ import type { User } from "../types/auth";
 import { getUserById, updateUser, deleteUser } from "../services/userService";
 import { getUser, saveUser, removeToken, removeUser } from "../services/sessionService";
 import useSessionError from "../hooks/useSessionError";
+import { Link } from "react-router";
 
 export default function Profile() {
     const [user, setUser] = useState<User | null>(null); // Estado para armazenar os dados do usuário
@@ -82,6 +83,8 @@ export default function Profile() {
     return (
         <div >
             <h1>Profile Page</h1>
+
+            <Link to="/dashboard">Voltar ao Dashboard</Link>
             {/* Mostra "Loading..." enquanto os links estão sendo carregados */}
             {loading && <p>Loading...</p>} 
             {/* Mostra a mensagem de erro se houver algum erro no carregamento dos links */}
