@@ -44,6 +44,12 @@ export const updateUser = async (req, res) => {
         if (typeof email !== 'string' || !email.trim()) {
             return res.status(400).json({ message: 'O campo email é obrigatório' });
         }
+
+        //validar e-mail (formato válido)
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email.trim())) {
+            return res.status(400).json({ message: 'Formato de e-mail inválido' });
+        }
         
         //validar se o email já está em uso por outro usuário
         const normalizedEmail = email.trim().toLowerCase();
