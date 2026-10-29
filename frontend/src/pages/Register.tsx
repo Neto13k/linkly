@@ -23,8 +23,12 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             // Redirecionar para o dashboard após o registro
             navigate('/dashboard');
         });
-  } catch {
-        setError("Failed to register");
+  } catch (err) {  // Catch para capturar erros de registro e puxar a mensagem de erro do backend
+        if (err instanceof Error) {
+            setError(err.message);
+        } else {
+            setError("Failed to register");
+        }
     }
     finally {
         setLoading(false);

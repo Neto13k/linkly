@@ -21,8 +21,12 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             // Redirecionar para o dashboard após o login
             navigate('/dashboard');
         });
-  } catch {
+  } catch (err) {  // Catch para capturar erros de login e puxar a mensagem de erro do backend
+    if (err instanceof Error) {
+        setError(err.message);
+    } else {
         setError("Failed to login");
+    }
     } finally {
         setLoading(false);
     }
