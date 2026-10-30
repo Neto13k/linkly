@@ -22,7 +22,7 @@ CREATE TABLE links (
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT links_user_slug_unique UNIQUE (user_id, slug),
     CONSTRAINT links_slug_format CHECK (
-        char_length(slug) >= 3
+        char_length(slug) >= 4
         AND slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'
     ),
     CONSTRAINT links_destination_url_format CHECK (
