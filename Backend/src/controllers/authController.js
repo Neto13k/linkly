@@ -13,7 +13,7 @@ export const loginUser = async (req, res) => {
         return res.status(401).json({ message: 'Credenciais inválidas' });
     }
     const token = jwt.sign({ id: user.id,}, process.env.JWT_SECRET, { expiresIn: '1h' });
-    return res.json({ token, user: { id: user.id, username: user.username, email: user.email } }); // Retorna o token e os dados do usuário
+    return res.json({ token, user: { id: user.id, username: user.username, email: user.email, created_at: user.created_at} }); // Retorna o token e os dados do usuário
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Erro interno do servidor' });
@@ -63,7 +63,7 @@ export const registerUser = async (req, res) => {
             return res.status(400).json({ message: 'Erro ao criar usuário' });
         }
         const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        return res.status(201).json({ token, user: { id: user.id, username: user.username, email: user.email }, message: 'Usuário registrado com sucesso' }); // Retorna o token e os dados do usuário
+        return res.status(201).json({ token, user: { id: user.id, username: user.username, email: user.email, created_at: user.created_at }, message: 'Usuário registrado com sucesso' }); // Retorna o token e os dados do usuário
     } catch (error) {
         if (error.code === '23505') { // código de erro do PostgreSQL para violação de chave única
             return res.status(409).json({ message: 'E-mail ou nome de usuário já cadastrado' });
