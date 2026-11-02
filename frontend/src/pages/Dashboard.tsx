@@ -28,7 +28,7 @@ export default function Dashboard() {
         const fetchLinks = async () => {
             const user = getUser(); // pega o usuário do sessionStorage
             if (!user) { // Se não houver usuário, significa que o token expirou ou o usuário não está logado
-                setError("User not found");
+                setError("usuário não encontrado. Faça login novamente.");
                 setLoading(false);
                 return;
             }
@@ -140,7 +140,7 @@ export default function Dashboard() {
 
             <RouterLink to="/profile">Meu Perfil</RouterLink> 
             {/* Mostra "Loading..." enquanto os links estão sendo carregados */}
-            {loading && <p>Loading...</p>} 
+            {loading && <p>Carregando...</p>} 
             {/* Mostra a mensagem de erro se houver algum erro no carregamento dos links */}
             {error && <p>{error}</p>}
             {/* Mostra a mensagem de erro de ação se houver algum erro ao criar, atualizar ou deletar um link */}
@@ -148,7 +148,7 @@ export default function Dashboard() {
             {/* Mostra a lista de links se não houver carregamento e erro */}
             {!loading && !error && (
                 links.length === 0 ? (
-                    <p>No links found</p>
+                    <p>Nenhum link encontrado</p>
                 ) : (
                 <ul> 
                     {links.map((link) => (
@@ -171,19 +171,19 @@ export default function Dashboard() {
         handleUpdateLink(editingLinkId, editLink.slug, editLink.destination_url);
         }}>
             <input type="text" placeholder="Slug" value={editLink.slug} onChange={(e) => setEditLink({ ...editLink, slug: e.target.value })}/> {/* Input para o slug do link */}
-            <input type="text" placeholder="Destination URL" value={editLink.destination_url} onChange={(e) => setEditLink({ ...editLink, destination_url: e.target.value })}/> {/* Input para a URL de destino do link */}
-            <button type="submit" disabled={updating}>{updating ? "Updating..." : "Update Link"}</button> {/* Botão para atualizar o link, desabilitado enquanto o link está sendo atualizado */}
+            <input type="text" placeholder="URL de Destino" value={editLink.destination_url} onChange={(e) => setEditLink({ ...editLink, destination_url: e.target.value })}/> {/* Input para a URL de destino do link */}
+            <button type="submit" disabled={updating}>{updating ? "Atualizando..." : "Atualizar Link"}</button> {/* Botão para atualizar o link, desabilitado enquanto o link está sendo atualizado */}
         </form>
         )}
 
         {/* Formulario para criar um novo link */}
         <form onSubmit={handleCreateLink}>
             <input type="text" placeholder="Slug" value={newLink.slug} onChange={(e) => setNewLink({ ...newLink, slug: e.target.value })}/> {/* Input para o slug do link */}
-            <input type="text" placeholder="Destination URL" value={newLink.destination_url} onChange={(e) => setNewLink({ ...newLink, destination_url: e.target.value })}/> {/* Input para a URL de destino do link */}
-            <button type="submit" disabled={creating}>{creating ? "Creating..." : "Create Link"}</button> {/* Botão para criar o link, desabilitado enquanto o link está sendo criado */}
+            <input type="text" placeholder="URL de Destino" value={newLink.destination_url} onChange={(e) => setNewLink({ ...newLink, destination_url: e.target.value })}/> {/* Input para a URL de destino do link */}
+            <button type="submit" disabled={creating}>{creating ? "Criando..." : "Criar Link"}</button> {/* Botão para criar o link, desabilitado enquanto o link está sendo criado */}
         </form>
 
-        <button type="button" onClick={handleLogout}>Logout</button>
+        <button type="button" onClick={handleLogout}>Sair</button>
     </div>
     );
 }
