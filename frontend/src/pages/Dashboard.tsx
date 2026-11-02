@@ -4,6 +4,7 @@ import { getUser, removeToken, removeUser } from "../services/sessionService";
 import { getLinksByUserId, createLink, updateLink,  deleteLink  } from "../services/linkService";
 import useSessionError from "../hooks/useSessionError";
 import { useNavigate, Link as RouterLink } from "react-router";
+import CopyLinkButton from "../components/CopyLinkButton";
 
 
 
@@ -157,6 +158,7 @@ export default function Dashboard() {
                             <p>{link.click_count}</p>
                             {/* Mostra o slug do link como um link clicável */}
                             <a href={user ? `${import.meta.env.VITE_SHORT_URL_BASE}/${user.username}/${link.slug}` : "#"} target="_blank" rel="noopener noreferrer"> {user ? `${import.meta.env.VITE_SHORT_URL_BASE}/${user.username}/${link.slug}` : "#"}</a> 
+                            <CopyLinkButton link={user ? `${import.meta.env.VITE_SHORT_URL_BASE}/${user.username}/${link.slug}` : "#"} /> {/* Componente para copiar o link encurtado para a área de transferência */}
                             <button type="button" onClick={() => handleStartEdit(link)}>Editar</button> {/* Botão para iniciar a edição do link */}
                             <button type="button" onClick={() => handleDeleteLink(link.id)}>Deletar</button> {/* Botão para deletar o link */}
                         </li>
