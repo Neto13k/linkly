@@ -37,7 +37,11 @@ export default function Dashboard() {
                 setLinks(userLinks);
             } catch (err) {
                 if(!handleSessionError(err)) { // Verifica se o erro é de sessão
-                    setError("Failed to fetch links"); // Se não for, mostra uma mensagem de erro genérica
+                    if (err instanceof Error) {
+                        setError(err.message);
+                    } else {
+                        setError("Falha ao buscar links"); // Se não for, mostra uma mensagem de erro genérica
+                    }
                 }
             } finally {
                 setLoading(false);
@@ -52,17 +56,22 @@ export default function Dashboard() {
         setCreating(true);
         setActionError("");
 
-        try { // Cria um novo link usando o ID do usuário
-            const createdLink = await createLink(newLink.slug, newLink.destination_url);
-            setLinks((prevLinks) => [...prevLinks, createdLink]); // Adiciona o novo link à lista de links
-            setNewLink({ destination_url: "", slug: "" }); // Limpa o formulário após a criação do link
-        } catch (err){
-            if(!handleSessionError(err)) { // Verifica se o erro é de sessão
-                setActionError("Failed to create link"); // Se não for, mostra uma mensagem de erro genérica
+        try {
+        const createdLink = await createLink(newLink.slug, newLink.destination_url); // Chama a função para criar o link usando o slug e a URL de destino do estado newLink
+        setLinks((prevLinks) => [...prevLinks, createdLink]); // Adiciona o novo link à lista de links no estado
+        setNewLink({ destination_url: "", slug: "" }); // Limpa os campos do formulário após a criação do link
+
+    } catch (err) { // Se houver um erro ao criar o link, verifica se é um erro de sessão
+        if (!handleSessionError(err)) { // Se não for um erro de sessão, mostra uma mensagem de erro genérica
+            if (err instanceof Error) {
+                setActionError(err.message);
+            } else {
+                setActionError("Erro ao criar o link");
             }
-        } finally {
-            setCreating(false);
         }
+    } finally {
+        setCreating(false); // Define o estado de criação como falso após a tentativa de criação do link
+    }
     };
 
     // Função para iniciar a edição de um link existente
@@ -81,7 +90,11 @@ export default function Dashboard() {
             setEditingLinkId(null); // Limpa o estado de edição após a atualização
         } catch (err) {
             if(!handleSessionError(err)) { // Verifica se o erro é de sessão
-                setActionError("Failed to update link"); // Se não for, mostra uma mensagem de erro genérica
+                if (err instanceof Error) {
+                    setActionError(err.message);
+                } else {
+                    setActionError("Erro ao atualizar o link");
+                }
             }
         } finally {
             setUpdating(false);
@@ -101,7 +114,11 @@ export default function Dashboard() {
         }       
         catch (err) {
             if(!handleSessionError(err)) { // Verifica se o erro é de sessão
-                setActionError("Failed to delete link"); // Se não for, mostra uma mensagem de erro genérica
+                if (err instanceof Error) {
+                    setActionError(err.message);
+                } else {
+                    setActionError("Erro ao deletar o link");
+                }
             }
         }
     };
