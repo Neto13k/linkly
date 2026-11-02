@@ -155,7 +155,8 @@ export default function Dashboard() {
                         <li key={link.id}>
                             <p>{link.destination_url}</p>
                             <p>{link.click_count}</p>
-                            <a href={user ? `${import.meta.env.VITE_SHORT_URL_BASE}/${user.username}/${link.slug}` : "#"} target="_blank" rel="noopener noreferrer">{link.slug}</a> {/* Mostra o slug do link como um link clicável */}
+                            {/* Mostra o slug do link como um link clicável */}
+                            <a href={user ? `${import.meta.env.VITE_SHORT_URL_BASE}/${user.username}/${link.slug}` : "#"} target="_blank" rel="noopener noreferrer"> {user ? `${import.meta.env.VITE_SHORT_URL_BASE}/${user.username}/${link.slug}` : "#"}</a> 
                             <button type="button" onClick={() => handleStartEdit(link)}>Editar</button> {/* Botão para iniciar a edição do link */}
                             <button type="button" onClick={() => handleDeleteLink(link.id)}>Deletar</button> {/* Botão para deletar o link */}
                         </li>
