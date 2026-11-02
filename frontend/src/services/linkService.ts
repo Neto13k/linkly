@@ -21,7 +21,8 @@ export const getLinksByUserId = async (userId: number): Promise<Link[]> => {
   });
   handleAuthError(response);
     if (!response.ok) {
-        throw new Error('Failed to fetch links');
+        const data = await response.json();
+        throw new Error(data.message || 'Erro ao buscar os links do usuário');
     }
     return response.json();
 };
@@ -41,7 +42,8 @@ export const createLink = async (slug: string, destinationUrl: string): Promise<
     });
     handleAuthError(response);
     if (!response.ok) {
-        throw new Error('Failed to create link');
+        const data = await response.json();
+        throw new Error(data.message || 'Erro ao criar o link');
     }
     return response.json();
 }
@@ -61,7 +63,8 @@ export const updateLink = async (linkId: number, slug: string, destinationUrl: s
     });
     handleAuthError(response);
     if (!response.ok) {
-        throw new Error('Failed to update link');
+        const data = await response.json();
+        throw new Error(data.message || 'Erro ao atualizar o link');
     }
     return response.json();
 }
@@ -80,7 +83,8 @@ export const deleteLink = async (linkId: number): Promise<void> => {
     });
     handleAuthError(response);
     if (!response.ok) {
-        throw new Error('Failed to delete link');
+        const data = await response.json();
+        throw new Error(data.message || 'Erro ao deletar o link');
     }
     return;
 }
