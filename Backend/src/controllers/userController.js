@@ -27,7 +27,7 @@ export const getUserById = async (req, res) => {
 
 export const updateUser = async (req, res) => {
     try {
-        const { email } = req.body;
+        const { email } = req.body ?? {};
 
         //validar se o ID do usuário é um número inteiro
         const userId = Number(req.params.id);
