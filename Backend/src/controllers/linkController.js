@@ -49,7 +49,7 @@ export const getLinksByUserId = async (req, res) => {
 export const createLink = async (req, res) => {
     try {
         const userId = req.user.id;
-        const { slug, destinationUrl } = req.body;
+        const { slug, destinationUrl } = req.body ?? {};
 
         // Validar se o ID do usuário é um número inteiro
         if (!userId || typeof userId !== 'number' || userId <= 0 || !Number.isInteger(userId)) {
@@ -107,7 +107,7 @@ export const updateLink = async (req, res) => {
     try {
         const id = Number(req.params.id);
         const user_id = req.user.id;
-        const {slug, destinationUrl } = req.body;
+        const {slug, destinationUrl } = req.body ?? {};
 
         // Validar se o ID do link é um número inteiro
         if (!Number.isInteger(id) || id <= 0) {
