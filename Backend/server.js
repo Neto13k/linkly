@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { app } from './src/app.js';
 
 // Definir a porta do servidor
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT ||4000;
 
 // Verificar se a variável de ambiente JWT_SECRET está definida
 if (!process.env.JWT_SECRET?.trim()) {
