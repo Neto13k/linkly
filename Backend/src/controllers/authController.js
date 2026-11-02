@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 export const loginUser = async (req, res) => {
     try {
     //validar se o email e a senha foram fornecidos
-    const { email, password } = req.body;
+    const { email, password } = req.body ?? {};
     if (typeof email !== 'string' || typeof password !== 'string' || !email.trim() || !password.trim()) {
     return res.status(400).json({ message: 'Todos os campos são obrigatórios' });
     }
@@ -22,7 +22,7 @@ export const loginUser = async (req, res) => {
 
 export const registerUser = async (req, res) => {
     try {
-        const { username, email, password } = req.body;
+        const { username, email, password } = req.body ?? {};
         if (typeof username !== 'string' || typeof email !== 'string' || typeof password !== 'string' || !username.trim() || !email.trim() || !password.trim()) {
             return res.status(400).json({ message: 'Todos os campos são obrigatórios' });
         }
