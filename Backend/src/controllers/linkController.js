@@ -49,43 +49,57 @@ export const getLinksByUserId = async (req, res) => {
 export const createLink = async (req, res) => {
     try {
         const userId = req.user.id;
+        const { slug, destinationUrl } = req.body;
 
-        const {slug, destinationUrl } = req.body;
-        
-        //validar se o ID do usuário é um número inteiro
+        // Validar se o ID do usuário é um número inteiro
         if (!userId || typeof userId !== 'number' || userId <= 0 || !Number.isInteger(userId)) {
             return res.status(400).json({ message: 'ID de usuário inválido' });
         }
-        //validar se a URL de destino é uma string não vazia
-        if (!destinationUrl || typeof destinationUrl !== 'string' || !destinationUrl.trim() || destinationUrl.trim().length > 2048) {
+
+        // Validar se a URL de destino é uma string
+        if (typeof destinationUrl !== 'string') {
             return res.status(400).json({ message: 'URL de destino inválida' });
         }
-        //validar se a URL de destino é uma URL válida http ou https
+
+        // Normalizar a URL de destino
+        const normalizedDestinationUrl = destinationUrl.trim();
+
+        // Validar se a URL está vazia, contém espaços ou excede 2048 caracteres
+        if (!normalizedDestinationUrl || /\s/.test(normalizedDestinationUrl) || normalizedDestinationUrl.length > 2048) {
+            return res.status(400).json({ message: 'URL de destino inválida' });
+        }
+
+        // Validar se a URL utiliza HTTP ou HTTPS
         try {
-            const url = new URL(destinationUrl);
+            const url = new URL(normalizedDestinationUrl);
+
             if (url.protocol !== 'http:' && url.protocol !== 'https:') {
                 return res.status(400).json({ message: 'URL de destino inválida' });
             }
         } catch (error) {
             return res.status(400).json({ message: 'URL de destino inválida' });
         }
-        //validar se o slug é uma string não vazia e contém apenas letras, números e hífens 
+
+        // Validar o slug
         const slugRegex = /^[a-z0-9]+(-[a-z0-9]+)*$/;
-        if (!slug || typeof slug !== 'string' || !slugRegex.test(slug.trim()) || slug.trim().length <  4 || slug.trim().length > 30) {
+
+        if (!slug || typeof slug !== 'string' || !slugRegex.test(slug.trim()) || slug.trim().length < 4 || slug.trim().length > 30) {
             return res.status(400).json({ message: 'Slug inválido' });
         }
 
-        //validar o slug normalizado
+        // Normalizar o slug
         const normalizedSlug = slug.trim();
 
-        const link = await linkService.createLink( userId, destinationUrl, normalizedSlug );
-        res.status(201).json(link);
+        // Criar o link
+        const link = await linkService.createLink(userId, normalizedDestinationUrl, normalizedSlug);
+        return res.status(201).json(link);
+
     } catch (error) {
-        if (error.code === '23505') { // código de erro para violação de chave única no PostgreSQL
+        if (error.code === '23505') {
             return res.status(409).json({ message: 'Slug já em uso' });
         }
         console.error(error);
-        res.status(500).json({ message: 'Erro ao criar o link' });
+        return res.status(500).json({ message: 'Erro ao criar o link' });
     }
 };
 
@@ -105,14 +119,22 @@ export const updateLink = async (req, res) => {
             return res.status(400).json({ message: 'ID de usuário inválido' });
         }
 
-        // Validar se a URL de destino é uma string não vazia
-        if (!destinationUrl || typeof destinationUrl !== 'string' || !destinationUrl.trim() || destinationUrl.trim().length > 2048) {
+        // Validar se a URL de destino é uma string
+        if (typeof destinationUrl !== 'string') {
+            return res.status(400).json({ message: 'URL de destino inválida' });
+        }
+
+        // Normalizar a URL de destino
+        const normalizedDestinationUrl = destinationUrl.trim();
+
+        // Validar se a URL está vazia, contém espaços ou excede 2048 caracteres
+        if (!normalizedDestinationUrl || /\s/.test(normalizedDestinationUrl) || normalizedDestinationUrl.length > 2048) {
             return res.status(400).json({ message: 'URL de destino inválida' });
         }
 
         // Validar se a URL de destino é uma URL válida http ou https
         try {
-            const url = new URL(destinationUrl);
+            const url = new URL(normalizedDestinationUrl);
             if (url.protocol !== 'http:' && url.protocol !== 'https:') {
                 return res.status(400).json({ message: 'URL de destino inválida' });
             }
@@ -129,7 +151,7 @@ export const updateLink = async (req, res) => {
         // Validar o slug normalizado
         const normalizedSlug = slug.trim();
 
-        const link = await linkService.updateLink(id, user_id, destinationUrl, normalizedSlug);
+        const link = await linkService.updateLink(id, user_id, normalizedDestinationUrl, normalizedSlug);
 
         if (!link) {
             return res.status(404).json({ message: 'Link não encontrado' });
