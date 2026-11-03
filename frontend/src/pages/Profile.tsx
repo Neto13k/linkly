@@ -99,34 +99,40 @@ export default function Profile() {
 
 
     return (
-        <div >
-            <h1>Página do Perfil</h1>
+        <div className="page">
+            <header className="topbar">
+                <h1 className="topbar__title">Meu Perfil</h1>
+                <Link className="nav-link" to="/dashboard">Voltar ao Dashboard</Link>
+            </header>
 
-            <Link to="/dashboard">Voltar ao Dashboard</Link>
-            {/* Mostra "Loading..." enquanto os links estão sendo carregados */}
-            {loading && <p>Carregando...</p>} 
-            {/* Mostra a mensagem de erro se houver algum erro no carregamento dos links */}
-            {error && <p>{error}</p>}
+            {/* Mostra "Carregando..." enquanto os dados do usuário são carregados */}
+            {loading && <p className="status" role="status">Carregando...</p>}
+            {/* Mostra a mensagem de erro se houver algum erro no carregamento */}
+            {error && <p className="alert alert--error" role="alert">{error}</p>}
             {/* Mostra os detalhes do usuário se não houver erro e o usuário estiver carregado */}
             {!loading && !error && user && (
-                <div>
-                    <p><strong>Username:</strong> {user.username}</p>
-                    <p><strong>Email:</strong> {user.email}</p>
-                    <p><strong>Criado em:</strong> {new Date(user.created_at).toLocaleDateString("pt-BR")}</p>
-                    
-            {/* Formulário para atualizar o email do usuário */}
-            <form onSubmit={(e) => {e.preventDefault(); handleUpdateUser();}}>
-                <label htmlFor="email">Email:</label>
-                <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
-                <button type="submit">Atualizar email</button>
-            </form> 
+                <section className="card">
+                    <div className="profile-info">
+                        <p><strong>Username:</strong> {user.username}</p>
+                        <p><strong>Email:</strong> {user.email}</p>
+                        <p><strong>Criado em:</strong> {new Date(user.created_at).toLocaleDateString("pt-BR")}</p>
+                    </div>
 
-            {/* Mostra a mensagem de erro de ação se houver algum erro ao atualizar os dados do usuário */}
-            {actionError && <p>{actionError}</p>}
+                    {/* Formulário para atualizar o email do usuário */}
+                    <form className="form" onSubmit={(e) => {e.preventDefault(); handleUpdateUser();}}>
+                        <div className="form__field">
+                            <label htmlFor="email">Email</label>
+                            <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
+                        </div>
+                        <button type="submit" className="btn btn--primary">Atualizar email</button>
+                    </form>
 
-            {/* Botão para deletar o usuário */}
-            <button type="button" onClick={handleDeleteUser}>Excluir Conta</button>
-            </div>
+                    {/* Mostra a mensagem de erro de ação se houver algum erro ao atualizar os dados do usuário */}
+                    {actionError && <p className="alert alert--error" role="alert">{actionError}</p>}
+
+                    {/* Botão para deletar o usuário */}
+                    <button type="button" className="btn btn--danger" onClick={handleDeleteUser}>Excluir Conta</button>
+                </section>
             )}
         </div>
     );
