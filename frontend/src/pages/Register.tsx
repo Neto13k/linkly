@@ -35,15 +35,31 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     }
 };
 return (
-    <form onSubmit={handleSubmit}>
-        <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <input type="password" placeholder="Senha" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <button type="submit" disabled={loading}>
-            {loading ? "Registering..." : "Register"}
-        </button>
-        {error && <p>{error}</p>}
-        
-        <p>Já possui uma conta? <Link to="/login">Login</Link></p>
-    </form>
+    <main className="auth">
+        <form className="card auth__card" onSubmit={handleSubmit}>
+            <h1 className="auth__title">Criar conta</h1>
+
+            <div className="form__field">
+                <label htmlFor="register-username">Username</label>
+                <input id="register-username" type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="username" />
+            </div>
+
+            <div className="form__field">
+                <label htmlFor="register-email">Email</label>
+                <input id="register-email" type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
+            </div>
+
+            <div className="form__field">
+                <label htmlFor="register-password">Senha</label>
+                <input id="register-password" type="password" placeholder="Senha" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="new-password" />
+            </div>
+
+            <button type="submit" className="btn btn--primary" disabled={loading}>
+                {loading ? "Registrando..." : "Registrar"}
+            </button>
+            {error && <p className="alert alert--error" role="alert">{error}</p>}
+
+            <p className="auth__switch">Já possui uma conta? <Link to="/login">Login</Link></p>
+        </form>
+    </main>
 );}
