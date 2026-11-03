@@ -143,62 +143,87 @@ export default function Dashboard() {
     }
 
     return (
-        <div>
-            {/* Formulario para mostrar os links já criados */}
-            <h1>Dashboard</h1>
+        <div className="page">
+            <header className="topbar">
+                <h1 className="topbar__title">Dashboard</h1>
+                <nav className="topbar__nav">
+                    <RouterLink className="nav-link" to="/profile">Meu Perfil</RouterLink>
+                    <RouterLink className="nav-link" to="/regras">Regras</RouterLink>
+                </nav>
+                <button type="button" className="btn btn--ghost" onClick={handleLogout}>Sair</button>
+            </header>
 
-            <RouterLink to="/profile">Meu Perfil</RouterLink> 
-            {/* Mostra "Loading..." enquanto os links estão sendo carregados */}
-            {loading && <p>Carregando...</p>} 
+            {/* Mostra "Carregando..." enquanto os links estão sendo carregados */}
+            {loading && <p className="status" role="status">Carregando...</p>}
             {/* Mostra a mensagem de erro se houver algum erro no carregamento dos links */}
-            {error && <p>{error}</p>}
-            {/* Mostra a mensagem de erro de ação se houver algum erro ao criar, atualizar ou deletar um link */}
-            {actionError && <p>{actionError}</p>}
+            {error && <p className="alert alert--error" role="alert">{error}</p>}
+            {/* Mostra a mensagem de ação (sucesso ou erro) ao criar, atualizar ou deletar um link */}
+            {actionError && <p className="alert" role="status">{actionError}</p>}
+
             {/* Mostra a lista de links se não houver carregamento e erro */}
             {!loading && !error && (
-                links.length === 0 ? (
-                    <p>Nenhum link encontrado</p>
-                ) : (
-                <ul> 
-                    {links.map((link) => (
-                        <li key={link.id}>
-                            <p>{link.destination_url}</p>
-                            <p>Cliques: {link.click_count}</p>
-                            {/* Mostra o slug do link como um link clicável */}
-                            <a href={user ? `${import.meta.env.VITE_SHORT_URL_BASE}/${user.username}/${link.slug}` : "#"} target="_blank" rel="noopener noreferrer"> {user ? `${import.meta.env.VITE_SHORT_URL_BASE}/${user.username}/${link.slug}` : "#"}</a> 
-                            <CopyLinkButton link={user ? `${import.meta.env.VITE_SHORT_URL_BASE}/${user.username}/${link.slug}` : "#"} /> {/* Componente para copiar o link encurtado para a área de transferência */}
-                            <button type="button" onClick={() => handleStartEdit(link)}>Editar</button> {/* Botão para iniciar a edição do link */}
-                            <button type="button" onClick={() => handleDeleteLink(link.id)}>Deletar</button> {/* Botão para deletar o link */}                      
-                        </li>
-                    ))}
-                </ul>
-            ))}
-            
-            
-        {/* Formulario para editar um link existente */}
-        {editingLinkId !== null && (
-        <form onSubmit={(e) => {
-        e.preventDefault();
-        handleUpdateLink(editingLinkId, editLink.slug, editLink.destination_url);
-        }}>
-            <input type="text" placeholder="Slug" required value={editLink.slug} onChange={(e) => setEditLink({ ...editLink, slug: e.target.value })}/> {/* Input para o slug do link */}
-            <small>Slug é o final personalizado do link. Use apenas letras, números e hífens (ex.: meu-link).</small>
-            <input type="url" placeholder="URL de Destino" required value={editLink.destination_url} onChange={(e) => setEditLink({ ...editLink, destination_url: e.target.value })}/> {/* Input para a URL de destino do link */}
-            <button type="submit" disabled={updating}>{updating ? "Atualizando..." : "Atualizar Link"}</button> {/* Botão para atualizar o link, desabilitado enquanto o link está sendo atualizado */}
-        </form>
-        )}
+                <section className="card">
+                    <h2 className="card__title">Meus links</h2>
+                    {links.length === 0 ? (
+                        <p className="empty">Nenhum link encontrado</p>
+                    ) : (
+                        <ul className="link-list">
+                            {links.map((link) => (
+                                <li className="link-card" key={link.id}>
+                                    <p className="link-card__url">{link.destination_url}</p>
+                                    <p className="badge">Cliques: {link.click_count}</p>
+                                    {/* Mostra o slug do link como um link clicável */}
+                                    <a className="link-card__short" href={user ? `${import.meta.env.VITE_SHORT_URL_BASE}/${user.username}/${link.slug}` : "#"} target="_blank" rel="noopener noreferrer"> {user ? `${import.meta.env.VITE_SHORT_URL_BASE}/${user.username}/${link.slug}` : "#"}</a>
+                                    <CopyLinkButton link={user ? `${import.meta.env.VITE_SHORT_URL_BASE}/${user.username}/${link.slug}` : "#"} /> {/* Componente para copiar o link encurtado para a área de transferência */}
+                                    <div className="link-card__actions">
+                                        <button type="button" className="btn btn--secondary" onClick={() => handleStartEdit(link)}>Editar</button> {/* Botão para iniciar a edição do link */}
+                                        <button type="button" className="btn btn--danger" onClick={() => handleDeleteLink(link.id)}>Deletar</button> {/* Botão para deletar o link */}
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </section>
+            )}
 
-        <RouterLink to="/regras">Regras</RouterLink> 
+            {/* Formulario para editar um link existente */}
+            {editingLinkId !== null && (
+                <section className="card">
+                    <h2 className="card__title">Editar link</h2>
+                    <form className="form" onSubmit={(e) => {
+                        e.preventDefault();
+                        handleUpdateLink(editingLinkId, editLink.slug, editLink.destination_url);
+                    }}>
+                        <div className="form__field">
+                            <label htmlFor="edit-slug">Slug</label>
+                            <input id="edit-slug" type="text" placeholder="Slug" required value={editLink.slug} onChange={(e) => setEditLink({ ...editLink, slug: e.target.value })}/> {/* Input para o slug do link */}
+                            <small>Slug é o final personalizado do link. Use apenas letras, números e hífens (ex.: meu-link).</small>
+                        </div>
+                        <div className="form__field">
+                            <label htmlFor="edit-url">URL de Destino</label>
+                            <input id="edit-url" type="url" placeholder="URL de Destino" required value={editLink.destination_url} onChange={(e) => setEditLink({ ...editLink, destination_url: e.target.value })}/> {/* Input para a URL de destino do link */}
+                        </div>
+                        <button type="submit" className="btn btn--primary" disabled={updating}>{updating ? "Atualizando..." : "Atualizar Link"}</button> {/* Botão para atualizar o link, desabilitado enquanto o link está sendo atualizado */}
+                    </form>
+                </section>
+            )}
 
-        {/* Formulario para criar um novo link */}
-        <form onSubmit={handleCreateLink}>
-            <input type="text" placeholder="Slug" required value={newLink.slug} onChange={(e) => setNewLink({ ...newLink, slug: e.target.value })}/> {/* Input para o slug do link */}
-            <small>Slug é o final personalizado do link. Use apenas letras, números e hífens (ex.: meu-link).</small>
-            <input type="url" placeholder="URL de Destino" required value={newLink.destination_url} onChange={(e) => setNewLink({ ...newLink, destination_url: e.target.value })}/> {/* Input para a URL de destino do link */}
-            <button type="submit" disabled={creating}>{creating ? "Criando..." : "Criar Link"}</button> {/* Botão para criar o link, desabilitado enquanto o link está sendo criado */}
-        </form>
-
-        <button type="button" onClick={handleLogout}>Sair</button>
-    </div>
+            {/* Formulario para criar um novo link */}
+            <section className="card">
+                <h2 className="card__title">Criar novo link</h2>
+                <form className="form" onSubmit={handleCreateLink}>
+                    <div className="form__field">
+                        <label htmlFor="new-slug">Slug</label>
+                        <input id="new-slug" type="text" placeholder="Slug" required value={newLink.slug} onChange={(e) => setNewLink({ ...newLink, slug: e.target.value })}/> {/* Input para o slug do link */}
+                        <small>Slug é o final personalizado do link. Use apenas letras, números e hífens (ex.: meu-link).</small>
+                    </div>
+                    <div className="form__field">
+                        <label htmlFor="new-url">URL de Destino</label>
+                        <input id="new-url" type="url" placeholder="URL de Destino" required value={newLink.destination_url} onChange={(e) => setNewLink({ ...newLink, destination_url: e.target.value })}/> {/* Input para a URL de destino do link */}
+                    </div>
+                    <button type="submit" className="btn btn--primary" disabled={creating}>{creating ? "Criando..." : "Criar Link"}</button> {/* Botão para criar o link, desabilitado enquanto o link está sendo criado */}
+                </form>
+            </section>
+        </div>
     );
 }
