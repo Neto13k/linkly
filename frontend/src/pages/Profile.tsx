@@ -104,7 +104,7 @@ export default function Profile() {
 
             <Link to="/dashboard">Voltar ao Dashboard</Link>
             {/* Mostra "Loading..." enquanto os links estão sendo carregados */}
-            {loading && <p>Loading...</p>} 
+            {loading && <p>Carregando...</p>} 
             {/* Mostra a mensagem de erro se houver algum erro no carregamento dos links */}
             {error && <p>{error}</p>}
             {/* Mostra os detalhes do usuário se não houver erro e o usuário estiver carregado */}
