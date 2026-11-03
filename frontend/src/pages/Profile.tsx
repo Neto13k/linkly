@@ -34,7 +34,7 @@ export default function Profile() {
                     if (err instanceof Error) {
                         setError(err.message);
                     } else {
-                        setError("Failed to fetch user data");
+                        setError("Falha ao buscar dados do usuário");
                     }
                 }
             } finally {
@@ -100,7 +100,7 @@ export default function Profile() {
 
     return (
         <div >
-            <h1>Profile Page</h1>
+            <h1>Página do Perfil</h1>
 
             <Link to="/dashboard">Voltar ao Dashboard</Link>
             {/* Mostra "Loading..." enquanto os links estão sendo carregados */}
@@ -118,14 +118,14 @@ export default function Profile() {
             <form onSubmit={(e) => {e.preventDefault(); handleUpdateUser();}}>
                 <label htmlFor="email">Email:</label>
                 <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
-                <button type="submit">Update Email</button>
+                <button type="submit">Atualizar email</button>
             </form> 
 
             {/* Mostra a mensagem de erro de ação se houver algum erro ao atualizar os dados do usuário */}
             {actionError && <p>{actionError}</p>}
 
             {/* Botão para deletar o usuário */}
-            <button type="button" onClick={handleDeleteUser}>Delete Account</button>
+            <button type="button" onClick={handleDeleteUser}>Excluir Conta</button>
             </div>
             )}
         </div>
