@@ -33,13 +33,25 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 };
 
 return (
-    <form onSubmit={handleSubmit}>
-        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <input type="password" placeholder="Senha" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <button type="submit" disabled={loading}>Login</button>
-        {error && <p>{error}</p>}
+    <main className="auth">
+        <form className="card auth__card" onSubmit={handleSubmit}>
+            <h1 className="auth__title">Entrar</h1>
 
-        <p>Não possui uma conta? <Link to="/register">Registre-se</Link></p>
-    </form>
+            <div className="form__field">
+                <label htmlFor="login-email">Email</label>
+                <input id="login-email" type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
+            </div>
+
+            <div className="form__field">
+                <label htmlFor="login-password">Senha</label>
+                <input id="login-password" type="password" placeholder="Senha" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" />
+            </div>
+
+            <button type="submit" className="btn btn--primary" disabled={loading}>{loading ? "Entrando..." : "Login"}</button>
+            {error && <p className="alert alert--error" role="alert">{error}</p>}
+
+            <p className="auth__switch">Não possui uma conta? <Link to="/register">Registre-se</Link></p>
+        </form>
+    </main>
 );
 }
