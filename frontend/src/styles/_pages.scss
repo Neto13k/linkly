@@ -1,0 +1,38 @@
+@use "variables" as *;
+
+// Página de regras
+.regras {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  &__title {
+    margin: 0;
+  }
+
+  section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  h3 {
+    margin-top: 8px;
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 0;
+    padding-left: 20px;
+  }
+
+  li {
+    overflow-wrap: anywhere;
+  }
+
+  code {
+    overflow-wrap: anywhere;
+  }
+}
