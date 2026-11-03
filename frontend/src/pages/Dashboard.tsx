@@ -104,25 +104,33 @@ export default function Dashboard() {
 
     //função para deletar um link existente.
     const handleDeleteLink = async (linkId: number) => {
+        const confirmed = window.confirm("Tem certeza que deseja deletar este link? Esta ação não pode ser desfeita."); // Confirmação do usuário antes de deletar o link
+        if (!confirmed) {
+            return;
+        }
         setActionError("");
         try {
-            await deleteLink(linkId);
-            setLinks((prevLinks) => prevLinks.filter((link) => link.id !== linkId));
-            
-            if (editingLinkId === linkId) {
-                setEditingLinkId(null); // Limpa o estado de edição se o link deletado estava sendo editado
-            }
-        }       
-        catch (err) {
-            if(!handleSessionError(err)) { // Verifica se o erro é de sessão
-                if (err instanceof Error) {
-                    setActionError(err.message);
-                } else {
-                    setActionError("Erro ao deletar o link");
-                }
+        await deleteLink(linkId); // Chama a função para deletar o link usando o ID do link
+        setLinks((prevLinks) => prevLinks.filter((link) => link.id !== linkId)
+        );
+
+        // Fecha o formulário se o link excluído estava sendo editado
+        if (editingLinkId === linkId) {
+            setEditingLinkId(null);
+        }
+
+        setActionError("Link excluído com sucesso!");
+
+    } catch (err) {
+        if (!handleSessionError(err)) {
+            if (err instanceof Error) {
+                setActionError(err.message);
+            } else {
+                setActionError("Erro ao excluir o link");
             }
         }
-    };
+    }
+};
 
     const user = getUser(); // Pega o usuário do sessionStorage para exibir o nome do usuário no dashboard
 
