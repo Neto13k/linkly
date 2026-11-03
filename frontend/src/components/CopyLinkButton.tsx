@@ -8,16 +8,20 @@ interface CopyLinkButtonProps {
 }
 
 const CopyLinkButton: React.FC<CopyLinkButtonProps> = ({ link }) => { // Componente funcional que recebe o link como propriedade
-    const { copied, copyToClipboard } = useClipboard();
+    const { copied, error, copyToClipboard } = useClipboard();
 
     const handleCopy = () => { // Função para lidar com o evento de clique no botão
         copyToClipboard(link);
     };
 
     return ( // Retorna um botão que chama a função handleCopy ao ser clicado
-        <button type="button" onClick={handleCopy}>
-            {copied ? "Copiado!" : "Copiar Link"}
-        </button>
+        <>
+            <button type="button" onClick={handleCopy}>
+                {copied ? "Copiado!" : "Copiar Link"}
+            </button>
+            {/* Informa ao usuário caso a cópia falhe */}
+            {error && <span role="alert"> {error}</span>}
+        </>
     );
 };
 
