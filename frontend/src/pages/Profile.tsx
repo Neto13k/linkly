@@ -31,7 +31,11 @@ export default function Profile() {
                 setEmail(userData.email);
             } catch (err) {
                 if (!handleSessionError(err)) { // Verifica se o erro é de sessão
-                    setError("Failed to fetch user data");
+                    if (err instanceof Error) {
+                        setError(err.message);
+                    } else {
+                        setError("Failed to fetch user data");
+                    }
                 }
             } finally {
                 setLoading(false);
@@ -43,7 +47,13 @@ export default function Profile() {
     // Função para atualizar os dados do usuário
 
     const handleUpdateUser = async () => {
+        
         if (!user) return;
+        const confirmation = window.confirm("Você tem certeza que deseja atualizar seu email?");
+        if (!confirmation) {
+            return;
+        }
+
         setActionError("");
         try {
             const updatedUser = await updateUser(user.id, email);
@@ -52,7 +62,11 @@ export default function Profile() {
             setEmail(updatedUser.email);
         } catch (err) {
             if (!handleSessionError(err)) { // Verifica se o erro é de sessão
-                setActionError("Failed to update user data");               
+                if (err instanceof Error) {
+                    setActionError(err.message);
+                } else {
+                    setActionError("Falha ao atualizar o usuário");
+                }           
             }
         }
     }
@@ -73,7 +87,11 @@ export default function Profile() {
             navigate("/login", { replace: true });
         } catch (err) {
             if (!handleSessionError(err)) { // Verifica se o erro é de sessão
-            setActionError("Failed to delete user");               
+                if (err instanceof Error) {
+                    setActionError(err.message);
+                } else {
+                    setActionError("Falha ao deletar o usuário");
+                }
             }
         }
 
