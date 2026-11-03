@@ -5,7 +5,7 @@ import authRoutes from './routes/authRoutes.js';
 import { notFound } from './middlewares/notFound.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { redirectLink } from './controllers/linkController.js';
-import pool from './config/db.js';
+import pool from './db/db.js';
 
 const app = express();
 
