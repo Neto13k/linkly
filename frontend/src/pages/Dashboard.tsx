@@ -163,7 +163,7 @@ export default function Dashboard() {
                     {links.map((link) => (
                         <li key={link.id}>
                             <p>{link.destination_url}</p>
-                            <p>{link.click_count}</p>
+                            <p>Cliques: {link.click_count}</p>
                             {/* Mostra o slug do link como um link clicável */}
                             <a href={user ? `${import.meta.env.VITE_SHORT_URL_BASE}/${user.username}/${link.slug}` : "#"} target="_blank" rel="noopener noreferrer"> {user ? `${import.meta.env.VITE_SHORT_URL_BASE}/${user.username}/${link.slug}` : "#"}</a> 
                             <CopyLinkButton link={user ? `${import.meta.env.VITE_SHORT_URL_BASE}/${user.username}/${link.slug}` : "#"} /> {/* Componente para copiar o link encurtado para a área de transferência */}
@@ -181,8 +181,9 @@ export default function Dashboard() {
         e.preventDefault();
         handleUpdateLink(editingLinkId, editLink.slug, editLink.destination_url);
         }}>
-            <input type="text" placeholder="Slug" value={editLink.slug} onChange={(e) => setEditLink({ ...editLink, slug: e.target.value })}/> {/* Input para o slug do link */}
-            <input type="text" placeholder="URL de Destino" value={editLink.destination_url} onChange={(e) => setEditLink({ ...editLink, destination_url: e.target.value })}/> {/* Input para a URL de destino do link */}
+            <input type="text" placeholder="Slug" required value={editLink.slug} onChange={(e) => setEditLink({ ...editLink, slug: e.target.value })}/> {/* Input para o slug do link */}
+            <small>Slug é o final personalizado do link. Use apenas letras, números e hífens (ex.: meu-link).</small>
+            <input type="url" placeholder="URL de Destino" required value={editLink.destination_url} onChange={(e) => setEditLink({ ...editLink, destination_url: e.target.value })}/> {/* Input para a URL de destino do link */}
             <button type="submit" disabled={updating}>{updating ? "Atualizando..." : "Atualizar Link"}</button> {/* Botão para atualizar o link, desabilitado enquanto o link está sendo atualizado */}
         </form>
         )}
@@ -191,8 +192,9 @@ export default function Dashboard() {
 
         {/* Formulario para criar um novo link */}
         <form onSubmit={handleCreateLink}>
-            <input type="text" placeholder="Slug" value={newLink.slug} onChange={(e) => setNewLink({ ...newLink, slug: e.target.value })}/> {/* Input para o slug do link */}
-            <input type="text" placeholder="URL de Destino" value={newLink.destination_url} onChange={(e) => setNewLink({ ...newLink, destination_url: e.target.value })}/> {/* Input para a URL de destino do link */}
+            <input type="text" placeholder="Slug" required value={newLink.slug} onChange={(e) => setNewLink({ ...newLink, slug: e.target.value })}/> {/* Input para o slug do link */}
+            <small>Slug é o final personalizado do link. Use apenas letras, números e hífens (ex.: meu-link).</small>
+            <input type="url" placeholder="URL de Destino" required value={newLink.destination_url} onChange={(e) => setNewLink({ ...newLink, destination_url: e.target.value })}/> {/* Input para a URL de destino do link */}
             <button type="submit" disabled={creating}>{creating ? "Criando..." : "Criar Link"}</button> {/* Botão para criar o link, desabilitado enquanto o link está sendo criado */}
         </form>
 
