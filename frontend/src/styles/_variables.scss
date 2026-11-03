@@ -1,0 +1,43 @@
+// Tokens de design reaproveitando a paleta já existente do projeto.
+
+// Cores do tema claro
+$accent: #aa3bff;
+$accent-bg: rgba(170, 59, 255, 0.1);
+$accent-border: rgba(170, 59, 255, 0.5);
+$text: #6b6375;
+$text-h: #08060d;
+$bg: #fff;
+$border: #e5e4e7;
+$code-bg: #f4f3ec;
+
+// Texto sobre o fundo de destaque (mesmo valor nos dois temas para garantir contraste)
+$accent-contrast: #08060d;
+
+// Cores semânticas para mensagens de sucesso e erro
+$success: #1a7f4b;
+$success-bg: rgba(26, 127, 75, 0.1);
+$danger: #c0392b;
+$danger-bg: rgba(192, 57, 43, 0.1);
+
+// Tipografia e layout
+$font-sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+$font-mono: ui-monospace, Consolas, monospace;
+$radius: 8px;
+$radius-sm: 6px;
+$max-width: 1126px;
+
+// Breakpoints
+$bp-tablet: 1024px;
+$bp-mobile: 640px;
+
+@mixin tablet {
+  @media (max-width: $bp-tablet) {
+    @content;
+  }
+}
+
+@mixin mobile {
+  @media (max-width: $bp-mobile) {
+    @content;
+  }
+}
