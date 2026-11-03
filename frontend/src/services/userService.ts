@@ -45,7 +45,7 @@ export const updateUser = async (userId: number, email: string): Promise<User> =
     })
     handleAuthError(response)
     if (!response.ok) {
-        throw new Error('Failed to update user')
+        throw new Error('Falha ao atualizar usuário')
     }
 
     const updatedUserData = await response.json()
@@ -66,7 +66,7 @@ export const deleteUser = async (userId: number): Promise<void> => {
     })
     handleAuthError(response)
     if (!response.ok) {
-        throw new Error('Failed to delete user')
+        throw new Error('Falha ao deletar usuário')
     }
     return 
 }
