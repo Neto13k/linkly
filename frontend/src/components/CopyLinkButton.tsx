@@ -16,11 +16,11 @@ const CopyLinkButton: React.FC<CopyLinkButtonProps> = ({ link }) => { // Compone
 
     return ( // Retorna um botão que chama a função handleCopy ao ser clicado
         <>
-            <button type="button" onClick={handleCopy}>
+            <button type="button" className="btn btn--secondary" onClick={handleCopy}>
                 {copied ? "Copiado!" : "Copiar Link"}
             </button>
             {/* Informa ao usuário caso a cópia falhe */}
-            {error && <span role="alert"> {error}</span>}
+            {error && <p className="alert alert--error" role="alert">{error}</p>}
         </>
     );
 };
