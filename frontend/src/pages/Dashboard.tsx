@@ -160,7 +160,7 @@ export default function Dashboard() {
                             <a href={user ? `${import.meta.env.VITE_SHORT_URL_BASE}/${user.username}/${link.slug}` : "#"} target="_blank" rel="noopener noreferrer"> {user ? `${import.meta.env.VITE_SHORT_URL_BASE}/${user.username}/${link.slug}` : "#"}</a> 
                             <CopyLinkButton link={user ? `${import.meta.env.VITE_SHORT_URL_BASE}/${user.username}/${link.slug}` : "#"} /> {/* Componente para copiar o link encurtado para a área de transferência */}
                             <button type="button" onClick={() => handleStartEdit(link)}>Editar</button> {/* Botão para iniciar a edição do link */}
-                            <button type="button" onClick={() => handleDeleteLink(link.id)}>Deletar</button> {/* Botão para deletar o link */}
+                            <button type="button" onClick={() => handleDeleteLink(link.id)}>Deletar</button> {/* Botão para deletar o link */}                      
                         </li>
                     ))}
                 </ul>
@@ -178,6 +178,8 @@ export default function Dashboard() {
             <button type="submit" disabled={updating}>{updating ? "Atualizando..." : "Atualizar Link"}</button> {/* Botão para atualizar o link, desabilitado enquanto o link está sendo atualizado */}
         </form>
         )}
+
+        <RouterLink to="/regras">Regras</RouterLink> 
 
         {/* Formulario para criar um novo link */}
         <form onSubmit={handleCreateLink}>
