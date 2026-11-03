@@ -27,7 +27,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         if (err instanceof Error) {
             setError(err.message);
         } else {
-            setError("Failed to register");
+            setError("Falha ao registrar. Por favor, tente novamente.");
         }
     }
     finally {
@@ -38,7 +38,7 @@ return (
     <form onSubmit={handleSubmit}>
         <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
         <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <input type="password" placeholder="Senha" value={password} onChange={(e) => setPassword(e.target.value)} />
         <button type="submit" disabled={loading}>
             {loading ? "Registering..." : "Register"}
         </button>
