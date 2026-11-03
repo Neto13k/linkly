@@ -4,6 +4,7 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import Profile from './pages/Profile';
+import Regras from './pages/Regras';
 
 export default function App() {
   return (
@@ -12,6 +13,7 @@ export default function App() {
       <Route path="/login" element={<Login />} /> {/*rota de login*/}
       <Route path="/register" element={<Register />} /> {/*rota de registro*/}
       <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} /> {/*rota do dashboard protegida caso não esteja autenticado*/}
+      <Route path="/regras" element={<Regras />} /> {/*rota das regras*/}
       <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} /> {/*rota do perfil protegida caso não esteja autenticado*/}
     </Routes>
   );
