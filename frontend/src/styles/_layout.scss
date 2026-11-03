@@ -1,0 +1,80 @@
+@use "variables" as *;
+
+// Estrutura comum das páginas internas
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  min-height: 100svh;
+  padding: 24px 20px 48px;
+
+  @include mobile {
+    gap: 16px;
+    padding: 16px 14px 32px;
+  }
+}
+
+// Cabeçalho com título, navegação e ações
+.topbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+
+  &__title {
+    flex: 1 1 200px;
+    min-width: 0;
+  }
+
+  &__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+
+// Cartão base reaproveitado em todas as páginas
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: $radius;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+
+  @include mobile {
+    padding: 16px;
+  }
+
+  &__title {
+    margin: 0;
+  }
+}
+
+// Páginas de autenticação (login e registro)
+.auth {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100svh;
+  padding: 24px 16px;
+
+  &__card {
+    width: 100%;
+    max-width: 420px;
+  }
+
+  &__title {
+    text-align: center;
+  }
+
+  &__switch {
+    text-align: center;
+    font-size: 0.95rem;
+  }
+}
