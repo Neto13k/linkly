@@ -12,7 +12,6 @@ O projeto foi desenvolvido como uma aplicação prática de portfólio, integran
 | Login | [linklyhub.vercel.app/login](https://linklyhub.vercel.app/login) |
 | Cadastro | [linklyhub.vercel.app/register](https://linklyhub.vercel.app/register) |
 | Regras para criar links | [linklyhub.vercel.app/regras](https://linklyhub.vercel.app/regras) |
-| **API (backend)** | [linkly-6goz.onrender.com](https://linkly-6goz.onrender.com) |
 | Saúde da API e do banco | [linkly-6goz.onrender.com/api/health](https://linkly-6goz.onrender.com/api/health) |
 
 > Os links encurtados são servidos **pelo domínio do backend no Render**, não pelo domínio da Vercel. Em hospedagens gratuitas, o primeiro acesso após um período de inatividade pode demorar mais.
