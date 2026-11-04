@@ -1,3 +1,6 @@
+// Estruturas de layout compartilhadas pelas páginas.
+// Define a moldura da página (.page), o cabeçalho com navegação (.topbar),
+// o cartão base (.card) e o layout centralizado das telas de autenticação (.auth).
 @use "variables" as *;
 
 // Estrutura comum das páginas internas

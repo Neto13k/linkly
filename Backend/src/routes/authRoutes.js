@@ -1,3 +1,5 @@
+// Rotas de autenticação (montadas em /api/auth pelo app).
+// São públicas: não passam pelo middleware authenticateToken.
 import express from "express";
 import * as authController from "../controllers/authController.js";
 

@@ -1,3 +1,8 @@
+// Página principal (Dashboard) do usuário autenticado.
+// Concentra o CRUD de links encurtados: lista os links do usuário, cria, edita e exclui.
+// O estado local `links` é atualizado de forma otimista após cada operação, sem recarregar
+// a lista do backend. Erros de sessão (401) são tratados por useSessionError; os demais são
+// exibidos em `error` (carregamento) ou `actionError` (ações de criar/editar/excluir).
 import { useState, useEffect } from "react";
 import type { Link } from "../types/link";
 import { getUser, removeToken, removeUser } from "../services/sessionService";
@@ -52,6 +57,8 @@ export default function Dashboard() {
     }, [handleSessionError]);
 
     // Função para criar um novo link
+    // Envia o slug e a URL do estado `newLink`, insere o link retornado no fim da lista
+    // e limpa o formulário. O estado `creating` desabilita o botão durante a requisição.
     const handleCreateLink = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setCreating(true);
@@ -76,12 +83,16 @@ export default function Dashboard() {
     };
 
     // Função para iniciar a edição de um link existente
+    // Guarda o id em edição (controla a exibição do formulário) e preenche o formulário
+    // com os valores atuais do link, permitindo que o usuário os altere.
     const handleStartEdit = (link: Link) => {
         setEditingLinkId(link.id);
         setEditLink({ slug: link.slug, destination_url: link.destination_url });
     }
 
     // Função para atualizar um link existente
+    // Substitui, na lista local, apenas o link cujo id coincide com o atualizado
+    // e fecha o formulário de edição ao final.
     const handleUpdateLink = async (linkId: number, slug: string, destinationUrl: string) => {
         setUpdating(true);
         setActionError("");
@@ -173,6 +184,8 @@ export default function Dashboard() {
                                     <p className="link-card__url">{link.destination_url}</p>
                                     <p className="badge">Cliques: {link.click_count}</p>
                                     {/* Mostra o slug do link como um link clicável */}
+                                    {/* A URL curta é montada como base (VITE_SHORT_URL_BASE) + username + slug.
+                                        target="_blank" com rel="noopener noreferrer" evita que a nova aba acesse esta página via window.opener */}
                                     <a className="link-card__short" href={user ? `${import.meta.env.VITE_SHORT_URL_BASE}/${user.username}/${link.slug}` : "#"} target="_blank" rel="noopener noreferrer"> {user ? `${import.meta.env.VITE_SHORT_URL_BASE}/${user.username}/${link.slug}` : "#"}</a>
                                     <CopyLinkButton link={user ? `${import.meta.env.VITE_SHORT_URL_BASE}/${user.username}/${link.slug}` : "#"} /> {/* Componente para copiar o link encurtado para a área de transferência */}
                                     <div className="link-card__actions">

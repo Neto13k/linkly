@@ -1,3 +1,6 @@
+// Estilos de base: reset, tipografia e temas.
+// Define os tokens globais como CSS Custom Properties (para permitir a troca de tema por
+// prefers-color-scheme) e os elementos fundamentais (body, títulos, links, código, foco).
 @use "variables" as *;
 
 // Tokens globais (mantém o suporte a tema claro/escuro já existente)

@@ -1,3 +1,6 @@
+// Rotas de links (montadas em /api/links pelo app).
+// O authenticateToken é aplicado a todas as rotas deste router, pois o CRUD de links
+// exige usuário autenticado. A rota pública de redirecionamento fica no app (/).
 import express from 'express';
 const router = express.Router();
 import * as linkController from '../controllers/linkController.js';

@@ -1,3 +1,6 @@
+// Página de login.
+// Coleta e-mail e senha, autentica via authService e, em sucesso, persiste a sessão
+// (token + usuário) e redireciona para o dashboard. Erros do backend são exibidos em um alerta.
 import { useState } from "react";
 import { login } from "../services/authService"
 import { useNavigate, Link } from 'react-router';
@@ -16,6 +19,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     setError("");
     try {
         await login(email, password).then((response) => {
+            // Persiste a sessão antes de navegar, para que as rotas protegidas já encontrem o token
             saveToken(response.token);
             saveUser(response.user);
             // Redirecionar para o dashboard após o login

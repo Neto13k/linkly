@@ -1,3 +1,6 @@
+// Definição das rotas da aplicação.
+// As rotas /dashboard e /profile são envolvidas por ProtectedRoute, exigindo autenticação;
+// a rota raiz redireciona para /login.
 import { Routes, Route, Navigate } from 'react-router';
 import Login from './pages/Login';
 import Register from './pages/Register';

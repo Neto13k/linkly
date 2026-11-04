@@ -1,5 +1,10 @@
+// Controller de links: CRUD dos links encurtados e a rota pública de redirecionamento.
+// As operações de CRUD exigem autenticação (garantida nas rotas) e usam o id do usuário
+// autenticado em req.user. As validações replicam as restrições definidas no Schema.sql.
 import * as linkService from '../services/linkService.js';
 
+// Busca um link específico do usuário autenticado (GET /api/links/:id).
+// A consulta no service filtra por id E user_id, impedindo acesso a links de terceiros.
 export const getLinkById = async (req, res) => {
     try {
         //validar se o ID do link é um número inteiro
@@ -25,6 +30,8 @@ export const getLinkById = async (req, res) => {
     }
 };
 
+// Lista todos os links de um usuário (GET /api/links/user/:userId).
+// O usuário só pode consultar os próprios links: se o userId da rota diferir do autenticado, retorna 403.
 export const getLinksByUserId = async (req, res) => {
     try {
         //validar se o ID do usuário é um número inteiro
@@ -46,6 +53,9 @@ export const getLinksByUserId = async (req, res) => {
     }
 };
 
+// Cria um novo link encurtado para o usuário autenticado (POST /api/links).
+// Entrada: { slug, destinationUrl }. O slug é único por usuário (unicidade garantida pelo banco).
+// A URL precisa ser http/https válida, sem espaços e com no máximo 2048 caracteres.
 export const createLink = async (req, res) => {
     try {
         const userId = req.user.id;
@@ -103,6 +113,8 @@ export const createLink = async (req, res) => {
     }
 };
 
+// Atualiza slug e URL de um link existente do usuário (PUT /api/links/:id).
+// O UPDATE no service é restrito a id + user_id; se nenhuma linha casar, retorna 404.
 export const updateLink = async (req, res) => {
     try {
         const id = Number(req.params.id);
@@ -168,6 +180,8 @@ export const updateLink = async (req, res) => {
     }
 };
 
+// Remove um link do usuário (DELETE /api/links/:id).
+// A exclusão é restrita a id + user_id; se nada for removido, retorna 404.
 export const deleteLink = async (req, res) => {
     try {
         const id = Number(req.params.id);
@@ -196,6 +210,9 @@ export const deleteLink = async (req, res) => {
     }
 };
 
+// Rota pública de redirecionamento (GET /:username/:slug).
+// Esta é a URL que o visitante final acessa: resolve o link pelo par (username, slug),
+// incrementa o contador de cliques e redireciona para a URL de destino.
 export const redirectLink = async (req, res) => {
     try {
         // Validar se o slug contém apenas letras minúsculas, números e hífens

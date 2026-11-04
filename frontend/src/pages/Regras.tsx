@@ -2,6 +2,8 @@
 import { Link as RouterLink } from "react-router";
 
 // Página com as regras para criação de links
+// Página informativa e estática (sem chamadas de API), acessível na rota pública /regras.
+// O conteúdo textual replica, para o usuário, as validações de slug e URL aplicadas no backend.
 const Regras = () => {
     return (
         <main className="page">

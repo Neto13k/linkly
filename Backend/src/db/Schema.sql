@@ -1,3 +1,8 @@
+-- Esquema do banco de dados do Linkly.
+-- Define as tabelas de usuários, links encurtados e nomes reservados.
+-- As restrições (CONSTRAINT) replicam no banco as regras de negócio validadas pela API,
+-- garantindo integridade mesmo em acessos que não passem pelos controllers.
+-- Usuários da aplicação. Cada usuário é o "namespace" da URL curta (/:username/:slug).
 CREATE TABLE users (
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     username VARCHAR(30) NOT NULL,
@@ -13,6 +18,8 @@ CREATE TABLE users (
     CONSTRAINT users_email_lowercase CHECK (email = lower(email))
 );
 
+-- Links encurtados criados pelos usuários.
+-- ON DELETE CASCADE remove automaticamente os links quando o usuário é excluído.
 CREATE TABLE links (
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -32,6 +39,8 @@ CREATE TABLE links (
     CONSTRAINT links_click_count_nonnegative CHECK (click_count >= 0)
 );
 
+-- Nomes de usuário reservados (bloqueados).
+-- Impede que novos cadastros usem nomes que colidiriam com rotas ou recursos do sistema.
 CREATE TABLE blocked_names (
     name VARCHAR(30) PRIMARY KEY,
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,

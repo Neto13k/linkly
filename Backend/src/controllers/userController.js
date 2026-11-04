@@ -1,5 +1,10 @@
+// Controller de usuários: leitura, atualização de e-mail e exclusão de conta.
+// Todas as ações exigem autenticação e só podem ser feitas pelo próprio usuário
+// (compara-se o id da rota com req.user.id, retornando 403 em caso de divergência).
 import * as userService from '../services/userService.js';
 
+// Retorna os dados públicos do usuário autenticado (GET /api/users/:id).
+// Não expõe o hash da senha: o SELECT do service retorna apenas id, username, email e created_at.
 export const getUserById = async (req, res) => {
     try { 
         //validar se o ID do usuário é um número inteiro
@@ -25,6 +30,8 @@ export const getUserById = async (req, res) => {
 };
 
 
+// Atualiza o e-mail do usuário autenticado (PUT /api/users/:id).
+// Valida formato e unicidade: rejeita (409) o e-mail já usado por outro usuário; o e-mail atual do próprio é aceito.
 export const updateUser = async (req, res) => {
     try {
         const { email } = req.body ?? {};
@@ -71,6 +78,8 @@ export const updateUser = async (req, res) => {
     }
 };
 
+// Exclui a conta do usuário autenticado (DELETE /api/users/:id).
+// Em cascata, o banco também remove os links do usuário; o nome de usuário passa a ser bloqueado.
 export const deleteUser = async (req, res) => {
     try {
 

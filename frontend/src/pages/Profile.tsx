@@ -1,3 +1,7 @@
+// Página de perfil do usuário autenticado.
+// Carrega os dados atualizados do backend (não confia apenas no sessionStorage), permite
+// atualizar o e-mail e excluir a conta. Ambas as ações pedem confirmação e, em caso de
+// erro de sessão, delegam ao useSessionError.
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import type { User } from "../types/auth";
@@ -58,6 +62,7 @@ export default function Profile() {
         try {
             const updatedUser = await updateUser(user.id, email);
             setUser(updatedUser);
+            // Mantém o sessionStorage em sincronia com o backend
             saveUser(updatedUser);
             setEmail(updatedUser.email);
         } catch (err) {
@@ -84,6 +89,7 @@ export default function Profile() {
             await deleteUser(user.id); //execução sem erros
             removeToken();  // Remover token de autenticação
             removeUser();  // Remover dados do usuário da sessão
+            // replace evita voltar à rota protegida após a exclusão da conta
             navigate("/login", { replace: true });
         } catch (err) {
             if (!handleSessionError(err)) { // Verifica se o erro é de sessão

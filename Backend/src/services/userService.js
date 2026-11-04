@@ -1,6 +1,11 @@
+// Camada de acesso a dados dos usuários e regras de segurança de credenciais.
+// Responsável por hashear senhas (bcrypt), autenticar credenciais e consultar/persistir usuários.
+// Nenhuma consulta de leitura expõe o password_hash, exceto a usada internamente na autenticação.
 import pool from '../db/db.js';
 import bcrypt from 'bcrypt';
 
+// Gera o hash bcrypt da senha usando 10 rounds de salt.
+// O hash retornado é gravado em password_hash; a senha em texto puro nunca é persistida.
 async function hashPassword(password) {
     const saltRounds = 10;
     try {
@@ -11,6 +16,7 @@ async function hashPassword(password) {
     }
 }
 
+// Busca um usuário pelo id, retornando apenas dados públicos (sem password_hash).
 export const getUserById = async (id) => {
     const query = 'SELECT id, username, email, created_at FROM users WHERE id = $1';
     const values = [id];
@@ -18,6 +24,7 @@ export const getUserById = async (id) => {
     return result.rows[0];
 }
 
+// Busca um usuário pelo e-mail (normalizado em minúsculas). Usado para checar unicidade de e-mail.
 export const getUserByEmail = async (email) => {
     const query = 'SELECT id, username, email, created_at FROM users WHERE email = $1';
     const values = [email.trim().toLowerCase()];
@@ -25,6 +32,7 @@ export const getUserByEmail = async (email) => {
     return result.rows[0];
 }
 
+// Cria um usuário persistindo o hash da senha e o e-mail normalizado em minúsculas.
 export const createUser = async (username, email, password) => {
     const hashedPassword = await hashPassword(password);
     const query = 'INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3) RETURNING id, username, email, created_at';
@@ -33,6 +41,7 @@ export const createUser = async (username, email, password) => {
     return result.rows[0];
 }
 
+// Atualiza o e-mail do usuário (normalizado) e retorna os dados públicos atualizados.
 export const updateUser = async (id, email) => {
     const query = 'UPDATE users SET email = $1 WHERE id = $2 RETURNING id, username, email, created_at';
     const values = [email.trim().toLowerCase(), id];
@@ -40,6 +49,9 @@ export const updateUser = async (id, email) => {
     return result.rows[0];
 }
 
+// Exclui um usuário dentro de uma transação.
+// Além de remover o usuário (e, em cascata, seus links), insere o username em blocked_names
+// para que o mesmo nome não possa ser reutilizado por outro cadastro.
 export const deleteUser = async (id) => {
     const query = 'DELETE FROM users WHERE id = $1 RETURNING id, username'; // Retorna o id e o username do usuário deletado
     const connection = await pool.connect(); // Obter uma conexão do pool para iniciar uma transação
@@ -63,6 +75,7 @@ export const deleteUser = async (id) => {
     }
 }
 
+// Busca o usuário incluindo o password_hash; uso interno, apenas para verificação de credenciais.
 export const getUserForAuthentication = async (email) => {
     const query = 'SELECT id, username, email, password_hash, created_at FROM users WHERE email = $1';
     const values = [email.trim().toLowerCase()];
@@ -70,6 +83,9 @@ export const getUserForAuthentication = async (email) => {
     return result.rows[0];
 }
 
+// Verifica as credenciais comparando a senha informada com o hash armazenado (bcrypt.compare).
+// Retorna os dados públicos do usuário em caso de sucesso ou null se o usuário não existir
+// ou a senha estiver incorreta (não diferencia os dois casos, evitando enumeração de contas).
 export const authenticateUser = async (email, password) => {
     const user = await getUserForAuthentication(email);
     if (!user) {
@@ -82,6 +98,8 @@ export const authenticateUser = async (email, password) => {
     return { id: user.id, username: user.username, email: user.email, created_at: user.created_at };
 }
 
+// Verifica se um username está na tabela de nomes reservados (blocked_names).
+// Usa COUNT e converte para inteiro para devolver um booleano.
 export const isUsernameBlocked = async (username) => {
     const query = 'SELECT COUNT(*) FROM blocked_names WHERE name = $1';
     const values = [username.trim().toLowerCase()];

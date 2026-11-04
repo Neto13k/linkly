@@ -1,3 +1,5 @@
+// Rotas de usuários (montadas em /api/users pelo app).
+// Cada rota exige o middleware authenticateToken individualmente.
 import express from 'express';
 const router = express.Router();
 import * as userController from '../controllers/userController.js';

@@ -1,3 +1,7 @@
+// Página de registro.
+// Coleta username, e-mail e senha, cria a conta via authService e, em sucesso, já autentica
+// o usuário (salva a sessão) e o redireciona para o dashboard. As validações de formato e
+// unicidade são feitas no backend e suas mensagens são exibidas no alerta.
 import { useState } from "react";
 import { useNavigate } from 'react-router';
 import { register } from "../services/authService"
@@ -18,6 +22,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     setError("");
     try {
         await register(username, email, password).then((response) => {
+            // O backend já devolve o token no registro; persistimos a sessão antes de navegar
             saveToken(response.token);
             saveUser(response.user);
             // Redirecionar para o dashboard após o registro
