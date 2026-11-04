@@ -30,6 +30,14 @@ O projeto foi desenvolvido como uma aplicação prática de portfólio, integran
 - Perfil com visualização dos dados, atualização de e-mail mediante confirmação e exclusão da conta.
 - Interface estilizada com **SCSS**, layouts responsivos e suporte à preferência de tema claro/escuro do sistema.
 
+## Capturas de tela
+
+### Dashboard
+![Dashboard do Linkly](./frontend/src/assets/dashboard.png)
+
+### Tela de login
+![Tela de login do Linkly](./frontend/src/assets/login.png)
+
 ## Tecnologias
 
 | Camada | Tecnologias |
